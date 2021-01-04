@@ -1,0 +1,486 @@
+inherit_from: .rubocop_todo.yml
+inherit_mode:
+  merge:
+  - Exclude
+
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+  - ./lib/rubocop/custom_cops.rb
+
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+  - app/views/api/docs/content/**/*
+  - bin/bundle
+  - bin/delayed_job
+  - bin/rails
+  - bin/rake
+  - bin/spring
+  - benchmarks/**/*
+  - db/schema.rb
+  - data/**/*
+  - node_modules/**/*
+  - lib/rubocop/**/*
+  - log/**/*
+  - public/**/*
+  - tmp/**/*
+  - vendor/cache/**/*
+  - vendor/bundle/**/*
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: indent
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+  IndentOneStep: true
+
+Layout/DotPosition:
+  EnforcedStyle: leading
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Layout/EmptyLinesAroundExceptionHandlingKeywords:
+  Enabled: false
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/HashAlignment:
+  EnforcedLastArgumentHashStyle: always_ignore
+
+Layout/LineLength:
+  Max: 150
+  IgnoreCopDirectives: true
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: new_line
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+  IndentationWidth: 2
+
+Layout/SpaceBeforeBlockBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: space
+
+Layout/SpaceInLambdaLiteral:
+  EnforcedStyle: require_space
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: no_space
+
+Layout/SpaceInsideBlockBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space
+  SpaceBeforeBlockParameters: true
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+  - spec/**/*
+
+Lint/DuplicateBranch:
+  Enabled: true
+
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: true
+
+Lint/EmptyBlock:
+  Enabled: true
+
+Lint/EmptyClass:
+  Enabled: true
+
+Lint/MissingSuper:
+  Enabled: false
+
+Lint/NoReturnInBeginEndBlocks:
+  Enabled: true
+
+Lint/ToEnumArguments:
+  Enabled: true
+
+Lint/UnmodifiedReduceAccumulator:
+  Enabled: true
+
+Metrics/AbcSize:
+  Exclude:
+  - bin/**/*
+  - db/migrate/**/*
+
+Metrics/BlockLength:
+  CountAsOne: ['array', 'hash']
+  ExcludedMethods:
+    - class_methods
+    - instance_methods
+  Exclude:
+  - app/views/api/doc/insomnia_export.json.jbuilder
+  - config/initializers/devise.rb
+  - config/routes.rb
+  - config/environments/**/*
+  - lib/tasks/**/*.rake
+  - spec/**/*
+
+Metrics/ClassLength:
+  CountAsOne: ['array', 'hash']
+
+Metrics/MethodLength:
+  CountAsOne: ['array', 'hash']
+  Exclude:
+  - db/migrate/**/*
+
+Metrics/ModuleLength:
+  CountAsOne: ['array', 'hash']
+
+Naming/FileName:
+  Exclude:
+  - config/locales/**/*.rb
+
+Naming/VariableNumber:
+  CheckSymbols: false
+
+Performance:
+  Exclude:
+  - benchmarks/**/*
+
+Performance/AncestorsInclude:
+  Enabled: true
+
+Performance/BigDecimalWithNumericArgument:
+  Enabled: true
+
+Performance/Casecmp:
+  Enabled: false
+
+Performance/RedundantSortBlock:
+  Enabled: true
+
+Performance/RedundantStringChars:
+  Enabled: true
+
+Performance/ReverseFirst:
+  Enabled: true
+
+Performance/SortReverse:
+  Enabled: true
+
+Performance/Squeeze:
+  Enabled: true
+
+Performance/StringInclude:
+  Enabled: true
+
+Performance/Sum:
+  Enabled: true
+
+Rails:
+  Exclude:
+  - benchmarks/**/*
+
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: true
+
+Rails/ActiveRecordOverride:
+  Exclude:
+  - app/models/user/facebook_login.rb
+
+Rails/AfterCommitOverride:
+  Enabled: true
+
+Rails/BulkChangeTable:
+  Enabled: false
+
+Rails/Date:
+  Enabled: false
+
+Rails/DynamicFindBy:
+  Whitelist:
+  - find_by_sql
+  - find_by_query
+
+Rails/FilePath:
+  EnforcedStyle: slashes
+
+Rails/FindById:
+  Enabled: true
+
+Rails/Inquiry:
+  Enabled: true
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/MailerName:
+  Enabled: true
+
+Rails/MatchRoute:
+  Enabled: true
+
+Rails/NegateInclude:
+  Enabled: true
+
+Rails/OutputSafety:
+  Exclude:
+  - app/helpers/**/*.rb
+  - app/concepts/**/presenter/**/*.rb
+  - app/concepts/media/query/below_the_fold_data.rb
+
+Rails/Pluck:
+  Enabled: true
+
+Rails/PluckId:
+  Enabled: true
+
+Rails/PluckInWhere:
+  Enabled: true
+
+Rails/RakeEnvironment:
+  Enabled: false
+
+Rails/RenderInline:
+  Enabled: true
+
+Rails/RenderPlainText:
+  Enabled: true
+
+Rails/ShortI18n:
+  Enabled: true
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/SquishedSQLHeredocs:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+Rails/WhereExists:
+  Enabled: true
+  EnforcedStyle: where
+
+Rails/WhereNot:
+  Enabled: true
+
+RSpec:
+  Language:
+    ExampleGroups:
+      Regular:
+        - include_tests
+    Helpers:
+      - set
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+  - spec/system/**/*
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/ExpectChange:
+  EnforcedStyle: block
+
+RSpec/FilePath:
+  CustomTransform:
+    IStock: istock
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 6
+
+RSpec/NotToNot:
+  EnforcedStyle: to_not
+
+RSpec/QueueWorker:
+  Include:
+    - spec/**/*_spec.rb
+
+RSpec/StubbedMock:
+  Enabled: false
+
+RSpec/SubjectStub:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/ArgumentsForwarding:
+  Enabled: true # Ruby 2.7+ only
+
+Style/ArrayCoercion:
+  Enabled: true
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - app/models/user/*
+
+Style/CollectionCompact:
+  Enabled: true
+
+Style/CollectionMethods:
+  Enabled: true
+  PreferredMethods:
+    detect: detect
+    reduce: inject
+
+Style/CommentAnnotation:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/DocumentDynamicEvalDefinition:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+
+Style/GlobalStdStream:
+  Enabled: false
+
+Style/HashAsLastArrayItem:
+  EnforcedStyle: no_braces
+
+Style/HashSyntax:
+  Exclude:
+  - 'Rakefile'
+  - lib/tasks/*.rake
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: true
+  IgnoreMacros: true
+  IgnoredMethods:
+  - and
+  - authorize
+  - describe
+  - exit
+  - extend
+  - gem
+  - head
+  - helpers
+  - include
+  - load
+  - print
+  - private
+  - protected
+  - public
+  - puts
+  - raise
+  - redirect_back
+  - redirect_to
+  - render
+  - require
+  - require_relative
+  - run
+  - shared_context
+  - shared_examples
+  - sign_in
+  - sleep
+  - system
+  - throw
+  - to
+  - to_not
+  - visit
+  - yield
+  Exclude:
+  - /**/*.builder
+  - /**/*.jbuilder
+  - /**/*.rake
+  - config.ru
+  - config/unicorn.rb
+  - config/routes.rb
+  - config/schedule.rb
+  - db/**/*.rb
+  - Gemfile
+  - Gemfile.lock
+
+Style/NegatedIfElseCondition:
+  Enabled: true
+
+Style/NestedTernaryOperator:
+  Exclude:
+    - 'config/locales/plurals.rb'
+
+Style/NilLambda:
+  Enabled: true
+
+Style/NonNilCheck:
+  IncludeSemanticChanges: true
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+  Exclude:
+    - app/concepts/**/worker/*
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: "()"
+    "%i": "()"
+    "%I": "()"
+    "%w": "()"
+    "%W": "()"
+    "%r": "{}"
+
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
+  AllowInnerSlashes: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Style/StabbyLambdaParentheses:
+  EnforcedStyle: require_parentheses
+
+Style/SwapValues:
+  Enabled: true
+
+Style/SymbolArray:
+  Exclude:
+  - db/migrate/*.rb
+  - lib/tasks/*.rake

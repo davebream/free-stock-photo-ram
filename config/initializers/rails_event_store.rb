@@ -11,15 +11,17 @@ Rails.configuration.to_prepare do
   end
 
   # Subscribe event handlers below
-  # Rails.configuration.event_store.tap do |store|
-  #   store.subscribe(InvoiceReadModel.new, to: [InvoicePrinted])
+  Rails.configuration.event_store.tap do |store|
+    store.subscribe(->(event) { Media::Medium.call(event) }, to: Media::Medium::EVENTS)
   #   store.subscribe(->(event) { SendOrderConfirmation.new.call(event) }, to: [OrderSubmitted])
   #   store.subscribe_to_all_events(->(event) { Rails.logger.info(event.type) })
-  # end
+  end
 
   # Register command handlers below
-  # Rails.configuration.command_bus.tap do |bus|
-  #   bus.register(PrintInvoice, Invoicing::OnPrint.new)
+  Rails.configuration.command_bus.tap do |bus|
+    bus.register(Curation::RegisterPhoto, Curation::OnRegisterPhoto.new)
+    bus.register(Curation::MarkCopyrightAsNotFound, Curation::OnMarkCopyrightAsNotFound.new)
+    bus.register(Curation::PublishPhoto, Curation::OnPublishPhoto.new)
   #   bus.register(SubmitOrder,  ->(cmd) { Ordering::OnSubmitOrder.new.call(cmd) })
-  # end
+  end
 end

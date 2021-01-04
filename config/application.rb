@@ -8,6 +8,8 @@ Bundler.require(*Rails.groups)
 
 module Week3Homework
   class Application < Rails::Application
+    config.paths.add 'lib', eager_load: true
+    config.paths.add 'curation/lib', eager_load: true
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
