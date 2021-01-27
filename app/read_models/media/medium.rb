@@ -3,28 +3,28 @@ module Media
     self.table_name = 'read_model_media'
 
     EVENTS = [
-      Curation::PhotoRegistered,
-      Curation::PhotoRejected,
-      Curation::PhotoPublished,
-      Curation::PhotoCopyrightNotFound,
-      Curation::PhotoCopyrightFound
+      Curation::Event::PhotoRegistered,
+      Curation::Event::PhotoRejected,
+      Curation::Event::PhotoPublished,
+      Curation::Event::PhotoCopyrightNotFound,
+      Curation::Event::PhotoCopyrightFound
     ].freeze
 
     class << self
       def call(event)
         case event
-        when Curation::PhotoRegistered
+        when Curation::Event::PhotoRegistered
           set_status(event.data[:uid], 'registered')
-        when Curation::PhotoRejected
+        when Curation::Event::PhotoRejected
           set_status(event.data[:uid], 'rejected')
-        when Curation::PhotoPublished
+        when Curation::Event::PhotoPublished
           medium = find_or_initialize_by(id: event.data[:uid])
           medium.status = 'published'
           medium.publish_at = event.data[:publish_at]
           medium.save!
-        when Curation::PhotoCopyrightFound
+        when Curation::Event::PhotoCopyrightFound
           set_copyright(event.data[:uid], 'found')
-        when Curation::PhotoCopyrightNotFound
+        when Curation::Event::PhotoCopyrightNotFound
           set_copyright(event.data[:uid], 'ok')
         end
       end
