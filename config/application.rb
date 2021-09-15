@@ -8,6 +8,11 @@ Bundler.require(*Rails.groups)
 
 module Week3Homework
   class Application < Rails::Application
+    config.autoload_paths += %W(
+      #{config.root}/app/contexts/
+      #{config.root}/lib/**/**/
+    )
+
     config.paths.add 'lib', eager_load: true
     config.paths.add 'uploading/lib', eager_load: true
     config.paths.add 'media_processing/lib', eager_load: true
