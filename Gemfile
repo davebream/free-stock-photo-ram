@@ -21,6 +21,7 @@ gem 'bounded_context'
 gem 'dry-monads'
 gem 'dry-struct'
 gem 'dry-types'
+gem 'sidekiq'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
@@ -31,6 +32,7 @@ gem 'dry-types'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'pg', '~> 1.1.3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
