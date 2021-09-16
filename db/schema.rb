@@ -10,32 +10,64 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_04_133356) do
+ActiveRecord::Schema.define(version: 2021_09_15_161217) do
 
-  create_table "event_store_events", force: :cascade do |t|
-    t.string "event_id", limit: 36, null: false
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
+
+  create_table "event_store_events", id: :serial, force: :cascade do |t|
+    t.uuid "event_id", null: false
     t.string "event_type", null: false
     t.binary "metadata"
     t.binary "data", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "valid_at", precision: 6
+    t.datetime "created_at", null: false
+    t.datetime "valid_at"
     t.index ["created_at"], name: "index_event_store_events_on_created_at"
     t.index ["event_id"], name: "index_event_store_events_on_event_id", unique: true
     t.index ["event_type"], name: "index_event_store_events_on_event_type"
     t.index ["valid_at"], name: "index_event_store_events_on_valid_at"
   end
 
-  create_table "event_store_events_in_streams", force: :cascade do |t|
+  create_table "event_store_events_in_streams", id: :serial, force: :cascade do |t|
     t.string "stream", null: false
     t.integer "position"
-    t.string "event_id", limit: 36, null: false
-    t.datetime "created_at", precision: 6, null: false
+    t.uuid "event_id", null: false
+    t.datetime "created_at", null: false
     t.index ["created_at"], name: "index_event_store_events_in_streams_on_created_at"
     t.index ["stream", "event_id"], name: "index_event_store_events_in_streams_on_stream_and_event_id", unique: true
     t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
   end
 
-# Could not dump table "read_model_media" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
+  create_table "read_model_media", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status"
+    t.string "copyright"
+    t.datetime "publish_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "read_model_reviewing_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "filename"
+    t.string "status"
+    t.string "copyright"
+    t.datetime "uploaded_at"
+    t.datetime "publish_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "read_model_uploads_files", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "filename"
+    t.string "path"
+    t.bigint "width"
+    t.bigint "height"
+    t.bigint "average_color_red"
+    t.bigint "average_color_green"
+    t.bigint "average_color_blue"
+    t.datetime "uploaded_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
 end
