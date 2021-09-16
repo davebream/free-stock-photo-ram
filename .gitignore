@@ -40,3 +40,4 @@ yarn-debug.log*
 .yarn-integrity
 vendor/cache
 /public/images/**
+.vscode
