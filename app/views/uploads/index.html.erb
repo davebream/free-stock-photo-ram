@@ -1,0 +1,59 @@
+<div class="shadow-md rounded-md">
+  <div class="p-5 min-w-max w-full mb-4">
+    <%= form_with url: "/uploads", method: :post do |form| %>
+      <div class="block mt-4">
+        <%= form.label :files, 'Files' %>
+        <%= form.file_field :files, class: 'form-input mt-1 block w-full', required: true, multiple: true %>
+      </div>
+      <div class="block mt-4">
+        <%= form.submit 'Upload', class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline' %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Image
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Filename
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Dimensions
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Average color
+        </th>
+        <th scope="col" class="relative px-6 py-3">
+          <span class="sr-only">Download</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% @uploads.each do |file| %>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center h-40 w-40">
+              <%= image_tag file.filename, skip_pipeline: true, class: 'object-cover h-full w-full' %>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900"><%= file.filename %></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900"><%= "w: #{file.width}, h: #{file.height}" %></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900"><%= file.average_color %></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <%= link_to 'Download', image_path(file.filename, skip_pipeline: true), download: file.filename, class: 'text-blue-600 hover:text-blue-900' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

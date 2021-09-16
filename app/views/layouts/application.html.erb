@@ -1,18 +1,49 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Week3Homework</title>
+    <title>Free Stock Photos</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <link href="https://cdn.jsdelivr.net/npm/@tailwindcss/custom-forms@0.2.1/dist/custom-forms.css" rel="stylesheet">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="bg-gray-800">
+      <div class="max-w-7xl mx-auto px-8">
+        <div class="relative flex items-center justify-between h-16">
+          <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+            <div class="flex-shrink-0 flex items-center">
+              <span class="font-sans text-white font-semibold text-xl">Free Stock Photos</span>
+            </div>
+            <div class="hidden sm:block sm:ml-6">
+              <div class="flex space-x-4">
+                <%# <a href="#" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Uploads</a> %>
+                <%= link_to 'Uploads', uploads_path, class: 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium' %>
+                <%= link_to 'Reviewing', reviewing_index_path, class: 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium' %>
+                <%= link_to 'Tagging', reviewing_index_path, class: 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container mx-auto px-8 py-10">
+    <% if flash.any? %>
+      <div class="items-end justify-center mb-4">
+        <% flash.each do |type, message| %>
+          <div class="<%= tailwind_flash_classes(type.to_sym) %>">
+            <%= message %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+      <%= yield %>
+    </div>
   </body>
 </html>

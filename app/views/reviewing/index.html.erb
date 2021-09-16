@@ -1,0 +1,60 @@
+<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Photo
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Event Streams
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Status
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Copyright
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Published
+        </th>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% @photos.each do |photo| %>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center h-40 w-40">
+              <%= image_tag photo.filename, skip_pipeline: true, class: 'object-cover h-full w-full' %>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <% photo.stream_links.each do |stream_link| %>
+              <a class="block text-blue-600 hover:text-blue-900" href="<%= stream_link[:url] %>" target=><%= stream_link[:name] %></a>
+            <% end %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900"><%= photo.status %></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900"><%= photo.copyright %></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900"><%= photo.published? %></div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div>
+              <%= link_to 'Reject', reject_reviewing_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
+              |
+              <%= link_to 'Pre Approve', pre_approve_reviewing_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
+              |
+              <%= link_to 'Approve', approve_reviewing_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
