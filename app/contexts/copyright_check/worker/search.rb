@@ -1,17 +1,20 @@
 module CopyrightCheck
   module Worker
     class Search
-      include Sidekiq::Worker
+      include FreeStockPhotoWorker
 
-      def perform(uid)
-        sleep (8..20).to_a.sample
+      prepend MetadataHandler
+      prepend RailsEventStore::AsyncHandler
+
+      def perform(event)
+        sleep_random
 
         events = [
-          Event::Found.new(data: { uid: uid }),
-          Event::NotFound.new(data: { uid: uid })
+          Event::Found.new(data: { uid: event.data.fetch(:uid) }),
+          Event::NotFound.new(data: { uid: event.data.fetch(:uid) })
         ]
 
-        Rails.configuration.event_store.publish(events.sample)
+        event_store.publish(events.sample)
       end
     end
   end

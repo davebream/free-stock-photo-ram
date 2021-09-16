@@ -9,18 +9,9 @@ class Configuration
     Reviewing::Configuration.new(cqrs).call
     Publishing::Configuration.new(cqrs).call
 
-    cqrs.subscribe(
-      ->(event) { ::CopyrightCheck::Worker::Search.perform_async(event.data.fetch(:uid)) },
-      [::Uploading::Event::ImageUploaded]
-    )
-
-    cqrs.subscribe(
-      lambda do |event|
-        ImageProcessing::Worker::ExtractAverageColor.perform_async(event.data.fetch(:uid), event.data.fetch(:path))
-        ImageProcessing::Worker::RecognizeDimensions.perform_async(event.data.fetch(:uid), event.data.fetch(:path))
-      end,
-      [::Uploading::Event::ImageUploaded]
-    )
+    cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::ImageUploaded])
+    cqrs.subscribe(ImageProcessing::Worker::ExtractAverageColor, [::Uploading::Event::ImageUploaded])
+    cqrs.subscribe(ImageProcessing::Worker::RecognizeDimensions, [::Uploading::Event::ImageUploaded])
 
     cqrs.subscribe(
       ImageProcessing::Process.new(event_store: event_store, command_bus: command_bus),
