@@ -14,4 +14,15 @@ module ApplicationHelper
     end
   end
 
+  def tailwind_tag_classes(source)
+    case source
+    when 'external'
+      'bg-white rounded-full text-gray-700 bg-gray-100 border border-gray-300'
+    when 'admin'
+      'bg-white rounded-full text-blue-700 bg-blue-100 border border-blue-300'
+    else
+      'bg-white rounded-full text-gray-700 bg-gray-100 border border-gray-300'
+    end
+  end
+
 end

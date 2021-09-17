@@ -13,4 +13,6 @@ Rails.application.routes.draw do
       post :approve
     end
   end
+
+  resources :tagging, only: [:index, :destroy, :create]
 end
