@@ -6,12 +6,27 @@ class Configuration
 
     UI::Configuration.new(cqrs).call
     ImageProcessing::Configuration.new(cqrs).call
+    Tagging::Configuration.new(cqrs).call
     Reviewing::Configuration.new(cqrs).call
     Publishing::Configuration.new(cqrs).call
 
     cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::ImageUploaded])
     cqrs.subscribe(ImageProcessing::Worker::ExtractAverageColor, [::Uploading::Event::ImageUploaded])
     cqrs.subscribe(ImageProcessing::Worker::RecognizeDimensions, [::Uploading::Event::ImageUploaded])
+
+    cqrs.subscribe(
+      lambda do |event|
+        cqrs.run(Tagging::Command::SetPath.new(uid: event.data.fetch(:uid), path: event.data.fetch(:path)))
+      end,
+      [Uploading::Event::ImageUploaded]
+    )
+
+    cqrs.subscribe(
+      lambda do |event|
+        cqrs.run(Tagging::Command::RequestAutoTagging.new(uid: event.data.fetch(:uid)))
+      end,
+      [Reviewing::Event::PhotoApproved]
+    )
 
     cqrs.subscribe(
       ImageProcessing::Process.new(event_store: event_store, command_bus: command_bus),
