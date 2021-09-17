@@ -19,6 +19,11 @@ module UI
 
       @cqrs.subscribe(UI::Reviewing::OnCopyrightFound.new, [::CopyrightCheck::Event::Found])
       @cqrs.subscribe(UI::Reviewing::OnCopyrightNotFound.new, [::CopyrightCheck::Event::NotFound])
+
+      @cqrs.subscribe(UI::Tagging::OnImageUploaded.new, [::Uploading::Event::ImageUploaded])
+      @cqrs.subscribe(UI::Tagging::OnAutoTagsAdded.new, [::Tagging::Event::AutoTagsAdded])
+      @cqrs.subscribe(UI::Tagging::OnTagsAdded.new, [::Tagging::Event::TagsAdded])
+      @cqrs.subscribe(UI::Tagging::OnTagRemoved.new, [::Tagging::Event::TagRemoved])
     end
   end
 end

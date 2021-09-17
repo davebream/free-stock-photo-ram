@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_15_161217) do
+ActiveRecord::Schema.define(version: 2021_09_17_133614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -57,6 +57,22 @@ ActiveRecord::Schema.define(version: 2021_09_15_161217) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "read_model_tagging_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "filename"
+    t.datetime "last_tagging_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "read_model_tagging_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "photo_id"
+    t.string "name", null: false
+    t.string "source", null: false
+    t.string "provider"
+    t.datetime "added_at"
+    t.index ["photo_id"], name: "index_read_model_tagging_tags_on_photo_id"
+  end
+
   create_table "read_model_uploads_files", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "filename"
     t.string "path"
@@ -70,4 +86,5 @@ ActiveRecord::Schema.define(version: 2021_09_15_161217) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "read_model_tagging_tags", "read_model_tagging_photos", column: "photo_id"
 end
