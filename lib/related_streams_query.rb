@@ -2,7 +2,7 @@ class RelatedStreamsQuery
   STREAM_NAMES = [
     'Reviewing::Photo',
     'Publishing::Photo',
-    'Tagging::Aggregate::Photo',
+    'Tagging::Photo',
     'PhotoPublishing',
     'ImageProcessing'
   ].freeze

@@ -1,10 +1,10 @@
 module Tagging
   module Command
     class SetPath < ::Command
-      attribute :uid, Types::UUID
+      attribute :photo_id, Types::UUID
       attribute :path, Types::Strict::String
 
-      alias :aggregate_id :uid
+      alias :aggregate_id :photo_id
     end
   end
 end

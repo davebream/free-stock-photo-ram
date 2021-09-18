@@ -11,7 +11,7 @@ module Tagging
         lambda do |event|
           @cqrs.run(
             Tagging::Command::AddAutoTags.new(
-              uid: event.data.fetch(:uid),
+              photo_id: event.data.fetch(:photo_id),
               tags: event.data.fetch(:tags),
               provider: event.data.fetch(:provider)
             )
@@ -20,11 +20,11 @@ module Tagging
         [Tagging::Event::AutoTagsGenerated]
       )
 
-      @cqrs.register(Tagging::Command::SetPath, Tagging::CommandHandler::OnSetPath.new)
-      @cqrs.register(Tagging::Command::RequestAutoTagging, Tagging::CommandHandler::OnRequestAutoTagging.new)
-      @cqrs.register(Tagging::Command::AddAutoTags, Tagging::CommandHandler::OnAddAutoTags.new)
-      @cqrs.register(Tagging::Command::AddTags, Tagging::CommandHandler::OnAddTags.new)
-      @cqrs.register(Tagging::Command::RemoveTag, Tagging::CommandHandler::OnRemoveTag.new)
+      @cqrs.register(Tagging::Command::SetPath, Tagging::PhotoService.new)
+      @cqrs.register(Tagging::Command::RequestAutoTagging, Tagging::PhotoService.new)
+      @cqrs.register(Tagging::Command::AddAutoTags, Tagging::PhotoService.new)
+      @cqrs.register(Tagging::Command::AddTags, Tagging::PhotoService.new)
+      @cqrs.register(Tagging::Command::RemoveTag, Tagging::PhotoService.new)
     end
   end
 end

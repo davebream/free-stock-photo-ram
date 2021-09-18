@@ -1,7 +1,7 @@
 module Tagging
   module Event
     class TagRemoved < ::Event
-      attribute :uid, Types::UUID
+      attribute :tag_id, Types::UUID
     end
   end
 end

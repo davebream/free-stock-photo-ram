@@ -12,9 +12,9 @@ class TaggingController < ApplicationController
     ActiveRecord::Base.transaction do
       command_bus.call(
         Tagging::Command::AddTags.new(
-          uid: params[:photo_id],
+          photo_id: params[:photo_id],
           tags: params[:tags].strip.split(',').map do |tag|
-            { uid: SecureRandom.uuid, name: tag.strip }
+            { id: SecureRandom.uuid, name: tag.strip }
           end
         )
       )

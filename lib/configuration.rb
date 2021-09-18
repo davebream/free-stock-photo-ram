@@ -16,14 +16,14 @@ class Configuration
 
     cqrs.subscribe(
       lambda do |event|
-        cqrs.run(Tagging::Command::SetPath.new(uid: event.data.fetch(:uid), path: event.data.fetch(:path)))
+        cqrs.run(Tagging::Command::SetPath.new(photo_id: event.data.fetch(:image_id), path: event.data.fetch(:path)))
       end,
       [Uploading::Event::ImageUploaded]
     )
 
     cqrs.subscribe(
       lambda do |event|
-        cqrs.run(Tagging::Command::RequestAutoTagging.new(uid: event.data.fetch(:uid)))
+        cqrs.run(Tagging::Command::RequestAutoTagging.new(photo_id: event.data.fetch(:photo_id)))
       end,
       [Reviewing::Event::PhotoApproved]
     )
