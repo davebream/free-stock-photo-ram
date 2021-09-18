@@ -3,7 +3,7 @@ class RelatedStreamsQuery
     'Reviewing::Aggregate::Photo',
     'Publishing::Aggregate::Photo',
     'Tagging::Aggregate::Photo',
-    'Publishing::PhotoPublishingProcess',
+    'PhotoPublishing',
     'ImageProcessing::Process'
   ].freeze
 

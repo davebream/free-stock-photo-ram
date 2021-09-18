@@ -10,6 +10,7 @@ module Week3Homework
   class Application < Rails::Application
     config.autoload_paths += %W(
       #{config.root}/app/contexts/
+      #{config.root}/app/processes/
       #{config.root}/lib/**/**/
     )
 

@@ -5,8 +5,8 @@ module Publishing
     end
 
     def call
-      @cqrs.register(Publishing::Command::PublishPhoto, Publishing::CommandHandler::OnPublishPhoto.new)
-      @cqrs.register(Publishing::Command::UnpublishPhoto, Publishing::CommandHandler::OnUnpublishPhoto.new)
+      @cqrs.register(Publishing::Command::PublishPhoto, Publishing::PhotoService.new)
+      @cqrs.register(Publishing::Command::UnpublishPhoto, Publishing::PhotoService.new)
     end
   end
 end

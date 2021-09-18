@@ -12,7 +12,7 @@ module UI
           'Reviewing::Aggregate::Photo',
           'Publishing::Aggregate::Photo',
           'Tagging::Aggregate::Photo',
-          'Publishing::PhotoPublishingProcess',
+          'PhotoPublishing',
           'ImageProcessing::Process'
         ].map { |stream_name| { name: stream_name, url: "http://localhost:3000/res/streams/#{stream_name}$#{id}" } }
       end

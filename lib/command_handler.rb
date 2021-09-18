@@ -1,4 +1,8 @@
 module CommandHandler
+  def call(command)
+    __send__(command.class.name.demodulize.underscore, command)
+  end
+
   def with_aggregate(aggregate_class, aggregate_id, &block)
     repository = AggregateRoot::InstrumentedRepository.new(AggregateRoot::Repository.new(event_store), ActiveSupport::Notifications)
     aggregate = aggregate_class.new(aggregate_id)

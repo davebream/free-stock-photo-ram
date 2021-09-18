@@ -38,7 +38,7 @@ class Configuration
     )
 
     cqrs.subscribe(
-      Publishing::PhotoPublishingProcess.new(event_store: event_store, command_bus: command_bus),
+      PhotoPublishing.new(event_store: event_store, command_bus: command_bus),
       [
         ImageProcessing::Event::ProcessingFinished,
         CopyrightCheck::Event::Found,
