@@ -10,8 +10,8 @@ module CopyrightCheck
         sleep_random
 
         events = [
-          Event::Found.new(data: { uid: event.data.fetch(:uid) }),
-          Event::NotFound.new(data: { uid: event.data.fetch(:uid) })
+          Event::Found.new(data: { image_id: event.data.fetch(:image_id) }),
+          Event::NotFound.new(data: { image_id: event.data.fetch(:image_id) })
         ]
 
         event_store.publish(events.sample)
