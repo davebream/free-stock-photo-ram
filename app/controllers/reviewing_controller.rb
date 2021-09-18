@@ -7,7 +7,7 @@ class ReviewingController < ApplicationController
 
   def reject
     ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::Command::RejectPhoto.new(uid: params[:id]))
+      command_bus.call(Reviewing::Command::RejectPhoto.new(photo_id: params[:id]))
     end
 
     redirect_to action: 'index'
@@ -15,7 +15,7 @@ class ReviewingController < ApplicationController
 
   def pre_approve
     ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::Command::PreApprovePhoto.new(uid: params[:id]))
+      command_bus.call(Reviewing::Command::PreApprovePhoto.new(photo_id: params[:id]))
     end
 
     redirect_to action: 'index'
@@ -23,7 +23,7 @@ class ReviewingController < ApplicationController
 
   def approve
     ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::Command::ApprovePhoto.new(uid: params[:id]))
+      command_bus.call(Reviewing::Command::ApprovePhoto.new(photo_id: params[:id]))
     end
 
     redirect_to action: 'index'
@@ -31,9 +31,9 @@ class ReviewingController < ApplicationController
     flash.keep
 
     case e
-    when Reviewing::Aggregate::Photo::NotYetPreApproved
+    when Reviewing::Photo::NotYetPreApproved
       flash[:error] = 'Photo not yet pre approved'
-    when Reviewing::Aggregate::Photo::HasBeenRejected
+    when Reviewing::Photo::HasBeenRejected
       flash[:error] = 'Approving rejected photos forbidden'
     else
       raise e
@@ -44,7 +44,7 @@ class ReviewingController < ApplicationController
 
   def publish
     ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::Command::PublishPhoto.new(uid: params[:id]))
+      command_bus.call(Reviewing::Command::PublishPhoto.new(photo_id: params[:id]))
     end
 
     redirect_to action: 'index'
@@ -52,9 +52,9 @@ class ReviewingController < ApplicationController
     flash.keep
 
     case e
-    when Reviewing::Aggregate::Photo::NotYetApproved
+    when Reviewing::Photo::NotYetApproved
       flash[:error] = 'Photo not yet approved'
-    when Reviewing::Aggregate::Photo::HasBeenRejected
+    when Reviewing::Photo::HasBeenRejected
       flash[:error] = 'Publishing rejected photos forbidden'
     else
       raise e

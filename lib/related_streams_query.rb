@@ -1,7 +1,7 @@
 class RelatedStreamsQuery
   STREAM_NAMES = [
-    'Reviewing::Aggregate::Photo',
-    'Publishing::Aggregate::Photo',
+    'Reviewing::Photo',
+    'Publishing::Photo',
     'Tagging::Aggregate::Photo',
     'PhotoPublishing',
     'ImageProcessing::Process'

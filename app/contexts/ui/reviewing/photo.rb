@@ -9,11 +9,11 @@ module UI
 
       def stream_links
         [
-          'Reviewing::Aggregate::Photo',
-          'Publishing::Aggregate::Photo',
+          'Reviewing::Photo',
+          'Publishing::Photo',
           'Tagging::Aggregate::Photo',
           'PhotoPublishing',
-          'ImageProcessing::Process'
+          'ImageProcessing'
         ].map { |stream_name| { name: stream_name, url: "http://localhost:3000/res/streams/#{stream_name}$#{id}" } }
       end
 
