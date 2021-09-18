@@ -4,7 +4,7 @@ class RelatedStreamsQuery
     'Publishing::Photo',
     'Tagging::Aggregate::Photo',
     'PhotoPublishing',
-    'ImageProcessing::Process'
+    'ImageProcessing'
   ].freeze
 
   def call(stream_name)

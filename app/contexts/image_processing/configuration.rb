@@ -5,7 +5,7 @@ module ImageProcessing
     end
 
     def call
-      @cqrs.register(ImageProcessing::Command::FinishProcessing, ImageProcessing::CommandHandler::OnFinishProcessing.new)
+      @cqrs.register(ImageProcessing::Command::FinishProcessing, ImageProcessing::ImageService.new)
     end
   end
 end

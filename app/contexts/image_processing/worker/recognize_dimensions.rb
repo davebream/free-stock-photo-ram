@@ -13,7 +13,7 @@ module ImageProcessing
         height = 1080
 
         event_store.publish(ImageProcessing::Event::DimensionsRecognized.new(data: {
-          uid: event.data.fetch(:uid),
+          image_id: event.data.fetch(:image_id),
           width: width,
           height: height
         }))

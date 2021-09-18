@@ -29,7 +29,7 @@ class Configuration
     )
 
     cqrs.subscribe(
-      ImageProcessing::Process.new(event_store: event_store, command_bus: command_bus),
+      ImageProcessing.new(event_store: event_store, command_bus: command_bus),
       [
         Uploading::Event::ImageUploaded,
         ImageProcessing::Event::DimensionsRecognized,

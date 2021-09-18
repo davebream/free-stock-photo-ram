@@ -2,7 +2,7 @@ module UI
   module Uploads
     class OnImageProcessingFinished
       def call(event)
-        file = UI::Uploads::File.find_or_initialize_by(id: event.data.fetch(:uid))
+        file = UI::Uploads::File.find_or_initialize_by(id: event.data.fetch(:image_id))
         file.width = event.data.fetch(:width)
         file.height = event.data.fetch(:height)
         file.average_color = event.data.fetch(:average_color)
