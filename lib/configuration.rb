@@ -42,7 +42,6 @@ class Configuration
     cqrs.subscribe(
       ImageProcessing.new(event_store: event_store, command_bus: command_bus),
       [
-        Uploading::Event::PhotoUploaded,
         FileProcessing::Event::DimensionsRecognized,
         FileProcessing::Event::AverageColorExtracted
       ]

@@ -30,12 +30,13 @@ class PhotoPublishing
   attr_reader :event_store, :command_bus
 
   def build_state(event)
-    stream_name = "PhotoPublishing$#{event.data.fetch(:photo_id)}"
+    photo_id = event.data.fetch(:photo_id)
+    stream_name = "PhotoPublishing$#{photo_id}"
     past_events = event_store.read.stream(stream_name).to_a
     last_stored = past_events.size - 1
     event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
 
-    ProcessState.new.tap do |state|
+    ProcessState.new(photo_id).tap do |state|
       past_events.each{ |ev| state.call(ev) }
       state.call(event)
     end
@@ -46,11 +47,11 @@ class PhotoPublishing
   class ProcessState
     attr_reader :photo_id
 
-    def initialize
-      @photo_id = nil
+    def initialize(photo_id)
+      @photo_id = photo_id
       @processed = false
-      @reviewing_status = nil
-      @copyright_status = nil
+      @reviewing_state = nil
+      @copyright_state = nil
       @published = false
     end
 
@@ -67,7 +68,7 @@ class PhotoPublishing
     end
 
     def approved?
-      @reviewing_status == :approved
+      @reviewing_state == :approved
     end
 
     def not_approved?
@@ -75,11 +76,11 @@ class PhotoPublishing
     end
 
     def copyright_not_found?
-      @copyright_status == :not_found
+      @copyright_state == :not_found
     end
 
     def copyright_found?
-      @copyright_status == :found
+      @copyright_state == :found
     end
 
     def publish?
@@ -93,18 +94,17 @@ class PhotoPublishing
     def call(event)
       case event
       when FileProcessing::Event::ProcessingFinished
-        @photo_id = event.data.fetch(:photo_id)
         @processed = true
       when CopyrightCheck::Event::Found
-        @copyright_status = :found
+        @copyright_state = :found
       when CopyrightCheck::Event::NotFound
-        @copyright_status = :not_found
+        @copyright_state = :not_found
       when Reviewing::Event::PhotoRejected
-        @reviewing_status = :rejected
+        @reviewing_state = :rejected
       when Reviewing::Event::PhotoPreApproved
-        @reviewing_status = :pre_approved
+        @reviewing_state = :pre_approved
       when Reviewing::Event::PhotoApproved
-        @reviewing_status = :approved
+        @reviewing_state = :approved
       when Publishing::Event::PhotoPublished
         @published = true
       when Publishing::Event::PhotoUnpublished

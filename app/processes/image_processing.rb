@@ -23,12 +23,13 @@ class ImageProcessing
   end
 
   def build_state(event)
-    stream_name = "ImageProcessing$#{event.data.fetch(:photo_id)}"
+    photo_id = event.data.fetch(:photo_id)
+    stream_name = "ImageProcessing$#{photo_id}"
     past_events = event_store.read.stream(stream_name).to_a
     last_stored = past_events.size - 1
     event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
 
-    ProcessState.new.tap do |state|
+    ProcessState.new(photo_id).tap do |state|
       past_events.each{ |ev| state.call(ev) }
       state.call(event)
     end
@@ -39,15 +40,15 @@ class ImageProcessing
   class ProcessState
     attr_reader :photo_id, :average_color, :width, :height
 
-    def initialize
-      @photo_id = nil
+    def initialize(photo_id)
+      @photo_id = photo_id
       @average_color = nil
       @width = nil
       @height = nil
     end
 
     def processing_finished?
-      photo_id.present? && average_color_extracted? && dimensions_recognized?
+      average_color_extracted? && dimensions_recognized?
     end
 
     def average_color_extracted?
@@ -60,8 +61,6 @@ class ImageProcessing
 
     def call(event)
       case event
-      when Uploading::Event::PhotoUploaded
-        @photo_id = event.data.fetch(:photo_id)
       when FileProcessing::Event::DimensionsRecognized
         @width = event.data.fetch(:width)
         @height = event.data.fetch(:height)
