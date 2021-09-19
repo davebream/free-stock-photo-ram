@@ -8,13 +8,6 @@ Bundler.require(*Rails.groups)
 
 module Week3Homework
   class Application < Rails::Application
-    config.autoload_paths += %W(
-      #{config.root}/app/contexts/
-      #{config.root}/app/processes/
-      #{config.root}/app/read_models/
-      #{config.root}/lib/**/**/
-    )
-
     config.paths.add 'lib', eager_load: true
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
