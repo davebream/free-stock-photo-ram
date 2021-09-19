@@ -33,7 +33,7 @@ module Tagging
     end
 
     def remove_tag(tag_id)
-      apply Event::TagRemoved.new(data: { tag_id: tag_id })
+      apply Event::TagRemoved.new(data: { photo_id: id, tag_id: tag_id })
     end
 
     private
