@@ -1,4 +1,4 @@
-module ImageProcessing
+module FileProcessing
   module Worker
     class RecognizeDimensions
       include FreeStockPhotoWorker
@@ -12,8 +12,9 @@ module ImageProcessing
         width = 1920
         height = 1080
 
-        event_store.publish(ImageProcessing::Event::DimensionsRecognized.new(data: {
+        event_store.publish(FileProcessing::Event::DimensionsRecognized.new(data: {
           image_id: event.data.fetch(:image_id),
+          photo_id: event.data.fetch(:photo_id),
           width: width,
           height: height
         }))

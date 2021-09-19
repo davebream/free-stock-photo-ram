@@ -13,8 +13,9 @@ class ImageProcessing
 
   def finish_processing(state)
     command_bus.call(
-      ImageProcessing::Command::FinishProcessing.new(
+      FileProcessing::Command::FinishProcessing.new(
         image_id: state.image_id,
+        photo_id: state.photo_id,
         average_color: state.average_color,
         width: state.width,
         height: state.height
@@ -37,17 +38,18 @@ class ImageProcessing
   end
 
   class ProcessState
-    attr_reader :image_id, :average_color, :width, :height
+    attr_reader :image_id, :photo_id, :average_color, :width, :height
 
     def initialize
       @image_id = nil
+      @photo_id = nil
       @average_color = nil
       @width = nil
       @height = nil
     end
 
     def processing_finished?
-      image_id.present? && average_color_extracted? && dimensions_recognized?
+      image_id.present? && photo_id.present? && average_color_extracted? && dimensions_recognized?
     end
 
     def average_color_extracted?
@@ -62,10 +64,11 @@ class ImageProcessing
       case event
       when Uploading::Event::ImageUploaded
         @image_id = image_id
-      when ImageProcessing::Event::DimensionsRecognized
+        @photo_id = event.data.fetch(:photo_id)
+      when FileProcessing::Event::DimensionsRecognized
         @width = event.data.fetch(:width)
         @height = event.data.fetch(:height)
-      when ImageProcessing::Event::AverageColorExtracted
+      when FileProcessing::Event::AverageColorExtracted
         @average_color = event.data.fetch(:rgb)
       end
     end

@@ -30,8 +30,7 @@ class PhotoPublishing
   attr_reader :event_store, :command_bus
 
   def build_state(event)
-    id = event.data[:photo_id].presence || event.data.fetch(:image_id)
-    stream_name = "PhotoPublishing$#{id}"
+    stream_name = "PhotoPublishing$#{event.data.fetch(:photo_id)}"
     past_events = event_store.read.stream(stream_name).to_a
     last_stored = past_events.size - 1
     event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
@@ -88,8 +87,8 @@ class PhotoPublishing
 
     def call(event)
       case event
-      when ImageProcessing::Event::ProcessingFinished
-        @photo_id = event.data.fetch(:image_id)
+      when FileProcessing::Event::ProcessingFinished
+        @photo_id = event.data.fetch(:photo_id)
       when CopyrightCheck::Event::Found
         @copyright_status = :found
       when CopyrightCheck::Event::NotFound
@@ -103,7 +102,7 @@ class PhotoPublishing
       when Publishing::Event::PhotoPublished
         @published = true
       when Publishing::Event::PhotoUnpublished
-        @published false
+        @published = false
       end
     end
   end
