@@ -2,26 +2,26 @@ module Tagging
   class Photo
     include AggregateRoot
 
-    NoPathSet = Class.new(StandardError)
+    MissingFilename = Class.new(StandardError)
 
     Tag = Struct.new(:id, :name, :source, :provider)
 
     def initialize(id)
       @id = id
-      @path = nil
+      @filename = nil
       @tags = []
     end
 
-    def set_path(path)
-      apply Event::PathSet.new(data: { photo_id: id, path: path })
+    def set_filename(filename)
+      apply Event::FilenameSet.new(data: { photo_id: id, filename: filename })
     end
 
     def request_auto_tagging
       return if already_auto_tagged?
 
-      raise NoPathSet unless path?
+      raise MissingFilename unless filename?
 
-      apply Event::AutoTaggingRequested.new(data: { photo_id: id, path: path })
+      apply Event::AutoTaggingRequested.new(data: { photo_id: id, filename: filename })
     end
 
     def add_auto_tags(tags, provider)
@@ -38,10 +38,10 @@ module Tagging
 
     private
 
-    attr_reader :id, :path, :tags
+    attr_reader :id, :filename, :tags
 
-    on Event::PathSet do |event|
-      @path = event.data.fetch(:path)
+    on Event::FilenameSet do |event|
+      @filename = event.data.fetch(:filename)
     end
 
     on Event::TagRemoved do |event|
@@ -53,14 +53,15 @@ module Tagging
 
     on Event::AutoTagsAdded do |event|
       @auto_tagged = true
-      @tags << event.data.fetch(:tags).map do |tag|
-        Tag.new(id: tag[:id], name: tag[:name], source: 'external', provider: event.data.fetch(:provider))
+
+      event.data.fetch(:tags).each do |tag|
+        @tags << Tag.new(id: tag[:id], name: tag[:name], source: 'external', provider: event.data.fetch(:provider))
       end
     end
 
     on Event::TagsAdded do |event|
-      @tags << event.data.fetch(:tags).map do |tag|
-        Tag.new(id: tag[:id], name: tag[:name], source: 'admin')
+      event.data.fetch(:tags).each do |tag|
+        @tags << Tag.new(id: tag[:id], name: tag[:name], source: 'admin')
       end
     end
 
@@ -68,8 +69,8 @@ module Tagging
       @auto_tagged
     end
 
-    def path?
-      @path.present?
+    def filename?
+      @filename.present?
     end
 
     attr_reader :state

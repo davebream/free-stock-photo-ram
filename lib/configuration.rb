@@ -7,21 +7,22 @@ class Configuration
     UI::Review::Photo::Configuration.new(cqrs).call
     UI::Tagging::Photo::Configuration.new(cqrs).call
     UI::Tagging::Tag::Configuration.new(cqrs).call
+    UI::Uploads::Photo::Configuration.new(cqrs).call
 
     FileProcessing::Configuration.new(cqrs).call
     Tagging::Configuration.new(cqrs).call
     Reviewing::Configuration.new(cqrs).call
     Publishing::Configuration.new(cqrs).call
 
-    cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::ImageUploaded])
-    cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::Event::ImageUploaded])
-    cqrs.subscribe(FileProcessing::Worker::RecognizeDimensions, [::Uploading::Event::ImageUploaded])
+    cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::PhotoUploaded])
+    cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::Event::PhotoUploaded])
+    cqrs.subscribe(FileProcessing::Worker::RecognizeDimensions, [::Uploading::Event::PhotoUploaded])
 
     cqrs.subscribe(
       lambda do |event|
-        cqrs.run(Tagging::Command::SetPath.new(photo_id: event.data.fetch(:image_id), path: event.data.fetch(:path)))
+        cqrs.run(Tagging::Command::SetFilename.new(photo_id: event.data.fetch(:photo_id), filename: event.data.fetch(:filename)))
       end,
-      [Uploading::Event::ImageUploaded]
+      [Uploading::Event::PhotoUploaded]
     )
 
     cqrs.subscribe(
@@ -34,7 +35,7 @@ class Configuration
     cqrs.subscribe(
       ImageProcessing.new(event_store: event_store, command_bus: command_bus),
       [
-        Uploading::Event::ImageUploaded,
+        Uploading::Event::PhotoUploaded,
         FileProcessing::Event::DimensionsRecognized,
         FileProcessing::Event::AverageColorExtracted
       ]

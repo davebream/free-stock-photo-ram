@@ -1,9 +1,6 @@
 class TaggingController < ApplicationController
   def index
-    @photos = UI::Tagging::Photo
-      .where.not(last_tagging_at: nil)
-      .order(last_tagging_at: :desc)
-      .includes(:tags)
+    @photos = UI::Tagging::Photo.tagged.order(last_tagging_at: :desc).includes(:tags)
 
     render :index
   end
@@ -25,7 +22,9 @@ class TaggingController < ApplicationController
 
   def destroy
     ActiveRecord::Base.transaction do
-      command_bus.call(Tagging::Command::RemoveTag.new(uid: params[:id]))
+      command_bus.call(
+        Tagging::Command::RemoveTag.new(photo_id: params[:id], tag_id: params[:tag_id])
+      )
     end
 
     redirect_to action: 'index'

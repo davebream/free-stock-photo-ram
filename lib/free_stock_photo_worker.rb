@@ -22,7 +22,7 @@ module FreeStockPhotoWorker
     end
 
     def sleep_random
-      sleep rand(8..15)
+      sleep rand(3..8)
     end
   end
 end

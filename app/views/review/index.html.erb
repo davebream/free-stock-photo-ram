@@ -46,11 +46,11 @@
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <div>
-              <%= link_to 'Reject', reject_reviewing_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
+              <%= link_to 'Reject', reject_review_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
               |
-              <%= link_to 'Pre Approve', pre_approve_reviewing_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
+              <%= link_to 'Pre Approve', pre_approve_review_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
               |
-              <%= link_to 'Approve', approve_reviewing_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
+              <%= link_to 'Approve', approve_review_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
             </div>
           </td>
         </tr>

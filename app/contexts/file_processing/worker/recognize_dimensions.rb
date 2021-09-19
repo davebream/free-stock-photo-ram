@@ -13,7 +13,6 @@ module FileProcessing
         height = 1080
 
         event_store.publish(FileProcessing::Event::DimensionsRecognized.new(data: {
-          image_id: event.data.fetch(:image_id),
           photo_id: event.data.fetch(:photo_id),
           width: width,
           height: height

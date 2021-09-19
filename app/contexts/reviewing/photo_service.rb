@@ -2,15 +2,15 @@ module Reviewing
   class PhotoService
     include CommandHandler
 
-    def pre_approve(command)
+    def pre_approve_photo(command)
       with_photo(command.aggregate_id, &:pre_approve)
     end
 
-    def reject(command)
+    def reject_photo(command)
       with_photo(command.aggregate_id, &:reject)
     end
 
-    def approve(command)
+    def approve_photo(command)
       with_photo(command.aggregate_id, &:approve)
     end
 

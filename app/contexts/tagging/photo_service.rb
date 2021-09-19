@@ -2,9 +2,9 @@ module Tagging
   class PhotoService
     include CommandHandler
 
-    def set_path(command)
+    def set_filename(command)
       with_photo(command.aggregate_id) do |photo|
-        photo.set_path(command.path)
+        photo.set_filename(command.filename)
       end
     end
 

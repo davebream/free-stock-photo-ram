@@ -4,9 +4,11 @@ Rails.application.routes.draw do
   mount EventBrowser => '/res' if Rails.env.development?
   mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
 
+  root 'uploads#index'
+
   resources :uploads, only: [:index, :create]
 
-  resources :reviewing, only: [:index] do
+  resources :review, only: [:index] do
     member do
       post :reject
       post :pre_approve

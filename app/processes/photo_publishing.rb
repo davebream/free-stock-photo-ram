@@ -20,7 +20,7 @@ class PhotoPublishing
   private
 
   def publish(state)
-    command_bus.call(Publishing::Command::PublishPhoto.new(id: state.photo_id))
+    command_bus.call(Publishing::Command::PublishPhoto.new(photo_id: state.photo_id))
   end
 
   def unpublish(state)
@@ -48,9 +48,14 @@ class PhotoPublishing
 
     def initialize
       @photo_id = nil
+      @processed = false
       @reviewing_status = nil
       @copyright_status = nil
       @published = false
+    end
+
+    def processed?
+      @processed
     end
 
     def published?
@@ -65,7 +70,7 @@ class PhotoPublishing
       @reviewing_status == :approved
     end
 
-    def unapproved?
+    def not_approved?
       !approved?
     end
 
@@ -78,17 +83,18 @@ class PhotoPublishing
     end
 
     def publish?
-      unpublished? && approved? && copyright_not_found?
+      processed? && unpublished? && approved? && copyright_not_found?
     end
 
     def unpublish?
-      published? && (unapproved? || copyright_found?)
+      published? && (not_approved? || copyright_found?)
     end
 
     def call(event)
       case event
       when FileProcessing::Event::ProcessingFinished
         @photo_id = event.data.fetch(:photo_id)
+        @processed = true
       when CopyrightCheck::Event::Found
         @copyright_status = :found
       when CopyrightCheck::Event::NotFound

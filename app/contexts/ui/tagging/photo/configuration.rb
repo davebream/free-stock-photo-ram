@@ -7,7 +7,7 @@ module UI
         end
 
         def call
-          subscribe(-> (event) { set_filename(event) }, [::Uploading::Event::ImageUploaded])
+          subscribe(-> (event) { set_filename(event) }, [::Tagging::Event::FilenameSet])
           subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::Event::AutoTagsAdded])
           subscribe(-> (event) { add_tags(event) }, [::Tagging::Event::TagsAdded])
         end

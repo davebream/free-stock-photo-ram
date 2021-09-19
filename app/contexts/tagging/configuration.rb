@@ -20,7 +20,7 @@ module Tagging
         [Tagging::Event::AutoTagsGenerated]
       )
 
-      @cqrs.register(Tagging::Command::SetPath, Tagging::PhotoService.new)
+      @cqrs.register(Tagging::Command::SetFilename, Tagging::PhotoService.new)
       @cqrs.register(Tagging::Command::RequestAutoTagging, Tagging::PhotoService.new)
       @cqrs.register(Tagging::Command::AddAutoTags, Tagging::PhotoService.new)
       @cqrs.register(Tagging::Command::AddTags, Tagging::PhotoService.new)
