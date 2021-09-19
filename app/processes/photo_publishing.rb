@@ -24,7 +24,7 @@ class PhotoPublishing
   end
 
   def unpublish(state)
-    command_bus.call(Publishing::Command::UnpublishPhoto.new(id: state.photo_id))
+    command_bus.call(Publishing::Command::UnpublishPhoto.new(photo_id: state.photo_id))
   end
 
   attr_reader :event_store, :command_bus
