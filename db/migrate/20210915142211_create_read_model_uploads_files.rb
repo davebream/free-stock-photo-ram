@@ -1,6 +1,6 @@
 class CreateReadModelUploadsFiles < ActiveRecord::Migration[6.1]
   def change
-    create_table :read_model_uploads_files, id: :uuid do |t|
+    create_table :read_model_uploads_images, id: :uuid do |t|
       t.string :filename
       t.string :path
       t.bigint :width

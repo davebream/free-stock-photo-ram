@@ -4,15 +4,18 @@ class Configuration
   def call(event_store, command_bus)
     cqrs = CQRS.new(event_store, command_bus)
 
-    UI::Configuration.new(cqrs).call
-    ImageProcessing::Configuration.new(cqrs).call
+    UI::Review::Photo::Configuration.new(cqrs).call
+    UI::Tagging::Photo::Configuration.new(cqrs).call
+    UI::Tagging::Tag::Configuration.new(cqrs).call
+
+    FileProcessing::Configuration.new(cqrs).call
     Tagging::Configuration.new(cqrs).call
     Reviewing::Configuration.new(cqrs).call
     Publishing::Configuration.new(cqrs).call
 
     cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::ImageUploaded])
-    cqrs.subscribe(ImageProcessing::Worker::ExtractAverageColor, [::Uploading::Event::ImageUploaded])
-    cqrs.subscribe(ImageProcessing::Worker::RecognizeDimensions, [::Uploading::Event::ImageUploaded])
+    cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::Event::ImageUploaded])
+    cqrs.subscribe(FileProcessing::Worker::RecognizeDimensions, [::Uploading::Event::ImageUploaded])
 
     cqrs.subscribe(
       lambda do |event|
@@ -32,15 +35,15 @@ class Configuration
       ImageProcessing.new(event_store: event_store, command_bus: command_bus),
       [
         Uploading::Event::ImageUploaded,
-        ImageProcessing::Event::DimensionsRecognized,
-        ImageProcessing::Event::AverageColorExtracted
+        FileProcessing::Event::DimensionsRecognized,
+        FileProcessing::Event::AverageColorExtracted
       ]
     )
 
     cqrs.subscribe(
       PhotoPublishing.new(event_store: event_store, command_bus: command_bus),
       [
-        ImageProcessing::Event::ProcessingFinished,
+        FileProcessing::Event::ProcessingFinished,
         CopyrightCheck::Event::Found,
         CopyrightCheck::Event::NotFound,
         Reviewing::Event::PhotoRejected,

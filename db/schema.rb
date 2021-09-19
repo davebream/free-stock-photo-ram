@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2021_09_17_133614) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "read_model_reviewing_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "read_model_review_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "filename"
     t.string "status"
     t.string "copyright"
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2021_09_17_133614) do
     t.index ["photo_id"], name: "index_read_model_tagging_tags_on_photo_id"
   end
 
-  create_table "read_model_uploads_files", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "read_model_uploads_images", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "filename"
     t.string "path"
     t.bigint "width"
