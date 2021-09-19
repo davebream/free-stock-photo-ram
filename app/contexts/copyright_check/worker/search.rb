@@ -9,12 +9,14 @@ module CopyrightCheck
       def perform(event)
         sleep_random
 
-        events = [
-          Event::Found.new(data: { image_id: event.data.fetch(:image_id) }),
-          Event::NotFound.new(data: { image_id: event.data.fetch(:image_id) })
-        ]
+        event_klass = [Event::Found, Event::NotFound].sample
 
-        event_store.publish(events.sample)
+        event_store.publish(event_klass.new(
+          data: {
+            photo_id: event.data.fetch(:photo_id),
+            image_id: event.data.fetch(:image_id)
+          }
+        ))
       end
     end
   end
