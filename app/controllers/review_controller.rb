@@ -1,6 +1,6 @@
 class ReviewController < ApplicationController
   def index
-    @photos = UI::Review::Photo.order(uploaded_at: :desc)
+    @photos = Review::Photo.order(uploaded_at: :desc)
 
     render :index
   end

@@ -4,10 +4,10 @@ class Configuration
   def call(event_store, command_bus)
     cqrs = CQRS.new(event_store, command_bus)
 
-    UI::Review::Photo::Configuration.new(cqrs).call
-    UI::Tagging::Photo::Configuration.new(cqrs).call
-    UI::Tagging::Tag::Configuration.new(cqrs).call
-    UI::Uploads::Photo::Configuration.new(cqrs).call
+    Review::Photo::Configuration.new(cqrs).call
+    Tags::Photo::Configuration.new(cqrs).call
+    Tags::Photo::Tag::Configuration.new(cqrs).call
+    Uploads::Photo::Configuration.new(cqrs).call
 
     FileProcessing::Configuration.new(cqrs).call
     Tagging::Configuration.new(cqrs).call

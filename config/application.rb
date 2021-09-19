@@ -11,6 +11,7 @@ module Week3Homework
     config.autoload_paths += %W(
       #{config.root}/app/contexts/
       #{config.root}/app/processes/
+      #{config.root}/app/read_models/
       #{config.root}/lib/**/**/
     )
 

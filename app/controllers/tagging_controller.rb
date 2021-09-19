@@ -1,6 +1,6 @@
 class TaggingController < ApplicationController
   def index
-    @photos = UI::Tagging::Photo.tagged.order(last_tagging_at: :desc).includes(:tags)
+    @photos = Tags::Photo.tagged.order(last_tagging_at: :desc).includes(:tags)
 
     render :index
   end

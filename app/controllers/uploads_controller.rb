@@ -1,6 +1,6 @@
 class UploadsController < ApplicationController
   def index
-    @uploads = UI::Uploads::Photo.order(uploaded_at: :desc)
+    @uploads = Uploads::Photo.order(uploaded_at: :desc)
 
     render :index
   end

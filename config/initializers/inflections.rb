@@ -5,7 +5,6 @@
 # locales as you wish. All of these examples are active by default:
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym('CQRS')
-  inflect.acronym('UI')
 end
 
 # These inflection rules are supported but not enabled by default:
