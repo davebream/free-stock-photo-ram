@@ -4,15 +4,20 @@ class Configuration
   def call(event_store, command_bus)
     cqrs = CQRS.new(event_store, command_bus)
 
-    Review::Photo::Configuration.new(cqrs).call
-    Tags::Photo::Configuration.new(cqrs).call
-    Tags::Photo::Tag::Configuration.new(cqrs).call
-    Uploads::Photo::Configuration.new(cqrs).call
+    # READ MODELS
+
+    Review::Configuration.new(cqrs).call
+    Tags::Configuration.new(cqrs).call
+    Uploads::Configuration.new(cqrs).call
+
+    # BOUNDED CONTEXTS
 
     FileProcessing::Configuration.new(cqrs).call
     Tagging::Configuration.new(cqrs).call
     Reviewing::Configuration.new(cqrs).call
     Publishing::Configuration.new(cqrs).call
+
+    # EVENT HANDLERS
 
     cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::PhotoUploaded])
     cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::Event::PhotoUploaded])
@@ -31,6 +36,8 @@ class Configuration
       end,
       [Reviewing::Event::PhotoApproved]
     )
+
+    # PROCESS MANAGERS
 
     cqrs.subscribe(
       ImageProcessing.new(event_store: event_store, command_bus: command_bus),
