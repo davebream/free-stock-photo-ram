@@ -18,7 +18,6 @@ module Tagging
 
     def request_auto_tagging
       return if already_auto_tagged?
-
       raise MissingFilename unless filename?
 
       apply Event::AutoTaggingRequested.new(data: { photo_id: id, filename: filename })
