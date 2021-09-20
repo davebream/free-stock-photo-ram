@@ -1,4 +1,4 @@
-module CopyrightCheck
+module CopyrightChecking
   module Event
     class Found < ::Event
       attribute :photo_id, Types::UUID

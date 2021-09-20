@@ -1,4 +1,4 @@
-module CopyrightCheck
+module CopyrightChecking
   module Worker
     class Search
       include FreeStockPhotoWorker

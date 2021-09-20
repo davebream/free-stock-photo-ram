@@ -19,7 +19,7 @@ class Configuration
 
     # EVENT HANDLERS
 
-    cqrs.subscribe(CopyrightCheck::Worker::Search, [::Uploading::Event::PhotoUploaded])
+    cqrs.subscribe(CopyrightChecking::Worker::Search, [::Uploading::Event::PhotoUploaded])
     cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::Event::PhotoUploaded])
     cqrs.subscribe(FileProcessing::Worker::RecognizeDimensions, [::Uploading::Event::PhotoUploaded])
 
@@ -51,8 +51,8 @@ class Configuration
       PhotoPublishing.new(event_store: event_store, command_bus: command_bus),
       [
         FileProcessing::Event::ProcessingFinished,
-        CopyrightCheck::Event::Found,
-        CopyrightCheck::Event::NotFound,
+        CopyrightChecking::Event::Found,
+        CopyrightChecking::Event::NotFound,
         Reviewing::Event::PhotoRejected,
         Reviewing::Event::PhotoPreApproved,
         Reviewing::Event::PhotoApproved,

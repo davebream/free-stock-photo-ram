@@ -95,9 +95,9 @@ class PhotoPublishing
       case event
       when FileProcessing::Event::ProcessingFinished
         @processed = true
-      when CopyrightCheck::Event::Found
+      when CopyrightChecking::Event::Found
         @copyright_state = :found
-      when CopyrightCheck::Event::NotFound
+      when CopyrightChecking::Event::NotFound
         @copyright_state = :not_found
       when Reviewing::Event::PhotoRejected
         @reviewing_state = :rejected
