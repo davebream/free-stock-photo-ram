@@ -5,7 +5,7 @@ class Command < Dry::Struct
 
   def self.new(*)
     super
-  rescue Dry::Struct::Error => doh
-    raise Invalid, doh
+  rescue Dry::Struct::Error => e
+    raise Invalid, e
   end
 end

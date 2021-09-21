@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration
   def call(event_store, command_bus)
     cqrs = CQRS.new(event_store, command_bus)

@@ -24,16 +24,18 @@ module Tags
         photo.last_tagging_at = event.timestamp
       end
 
-      create_tags(event.data.fetch(:tags).map do |tag|
-        {
-          photo_id: event.data.fetch(:photo_id),
-          id: tag.fetch(:id),
-          name: tag.fetch(:name),
-          source: 'external',
-          provider: event.data.fetch(:provider),
-          added_at: event.timestamp
-        }
-      end)
+      create_tags(
+        event.data.fetch(:tags).map do |tag|
+          {
+            photo_id: event.data.fetch(:photo_id),
+            id: tag.fetch(:id),
+            name: tag.fetch(:name),
+            source: 'external',
+            provider: event.data.fetch(:provider),
+            added_at: event.timestamp
+          }
+        end
+      )
     end
 
     def add_tags(event)
@@ -41,15 +43,17 @@ module Tags
         photo.last_tagging_at = event.timestamp
       end
 
-      create_tags(event.data.fetch(:tags).map do |tag|
-        {
-          photo_id: event.data.fetch(:photo_id),
-          id: tag.fetch(:id),
-          name: tag.fetch(:name),
-          source: 'admin',
-          added_at: event.timestamp
-        }
-      end)
+      create_tags(
+        event.data.fetch(:tags).map do |tag|
+          {
+            photo_id: event.data.fetch(:photo_id),
+            id: tag.fetch(:id),
+            name: tag.fetch(:name),
+            source: 'admin',
+            added_at: event.timestamp
+          }
+        end
+      )
     end
 
     def remove_tag(event)

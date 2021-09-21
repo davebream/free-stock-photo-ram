@@ -31,12 +31,12 @@ class ReviewController < ApplicationController
     flash.keep
 
     case e
-    when Reviewing::Photo::NotYetPreApproved
-      flash[:error] = 'Photo not yet pre approved'
-    when Reviewing::Photo::HasBeenRejected
-      flash[:error] = 'Approving rejected photos forbidden'
-    else
-      raise e
+      when Reviewing::Photo::NotYetPreApproved
+        flash[:error] = 'Photo not yet pre approved'
+      when Reviewing::Photo::HasBeenRejected
+        flash[:error] = 'Approving rejected photos forbidden'
+      else
+        raise e
     end
 
     redirect_to action: 'index'

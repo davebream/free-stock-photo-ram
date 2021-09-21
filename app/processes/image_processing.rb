@@ -30,7 +30,7 @@ class ImageProcessing
     event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
 
     ProcessState.new(photo_id).tap do |state|
-      past_events.each{ |ev| state.call(ev) }
+      past_events.each { |ev| state.call(ev) }
       state.call(event)
     end
   rescue RubyEventStore::WrongExpectedEventVersion
@@ -61,11 +61,11 @@ class ImageProcessing
 
     def call(event)
       case event
-      when FileProcessing::Event::DimensionsRecognized
-        @width = event.data.fetch(:width)
-        @height = event.data.fetch(:height)
-      when FileProcessing::Event::AverageColorExtracted
-        @average_color = event.data.fetch(:rgb)
+        when FileProcessing::Event::DimensionsRecognized
+          @width = event.data.fetch(:width)
+          @height = event.data.fetch(:height)
+        when FileProcessing::Event::AverageColorExtracted
+          @average_color = event.data.fetch(:rgb)
       end
     end
   end

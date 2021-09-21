@@ -56,7 +56,7 @@ module Uploads
     end
 
     def subscribe(handler, events)
-      @cqrs.subscribe(->(event) { handler.call(event) }, events)
+      @cqrs.subscribe(-> (event) { handler.call(event) }, events)
 
       events.each do |event_klass|
         @subscriptions[event_klass.to_s] ||= []

@@ -1,4 +1,4 @@
-class CreateReadModelUploadsPhotos< ActiveRecord::Migration[6.1]
+class CreateReadModelUploadsPhotos < ActiveRecord::Migration[6.1]
   def change
     create_table :read_model_uploads_photos, id: :uuid do |t|
       t.string :filename

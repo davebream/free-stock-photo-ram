@@ -7,8 +7,8 @@ class RelatedStreamsQuery
     'ImageProcessing'
   ].freeze
 
-  def call(stream_name)
-    prefix, id = stream_name.split('$')
+  def call(stream)
+    prefix, id = stream.split('$')
     return [] unless id
 
     (STREAM_NAMES - [prefix]).map { |stream_name| "#{stream_name}$#{id}" }

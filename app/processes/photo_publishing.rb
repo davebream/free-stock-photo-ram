@@ -7,14 +7,9 @@ class PhotoPublishing
   def call(event)
     state = build_state(event)
 
-    if state.publish?
-      publish(state)
-      return
-    end
-
-    if state.unpublish?
-      unpublish(state)
-    end
+    publish(state) if state.publish?
+    return unless state.unpublish?
+    unpublish(state)
   end
 
   private
@@ -37,7 +32,7 @@ class PhotoPublishing
     event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
 
     ProcessState.new(photo_id).tap do |state|
-      past_events.each{ |ev| state.call(ev) }
+      past_events.each { |ev| state.call(ev) }
       state.call(event)
     end
   rescue RubyEventStore::WrongExpectedEventVersion
@@ -93,22 +88,22 @@ class PhotoPublishing
 
     def call(event)
       case event
-      when FileProcessing::Event::ProcessingFinished
-        @processed = true
-      when CopyrightChecking::Event::Found
-        @copyright_state = :found
-      when CopyrightChecking::Event::NotFound
-        @copyright_state = :not_found
-      when Reviewing::Event::PhotoRejected
-        @reviewing_state = :rejected
-      when Reviewing::Event::PhotoPreApproved
-        @reviewing_state = :pre_approved
-      when Reviewing::Event::PhotoApproved
-        @reviewing_state = :approved
-      when Publishing::Event::PhotoPublished
-        @published = true
-      when Publishing::Event::PhotoUnpublished
-        @published = false
+        when FileProcessing::Event::ProcessingFinished
+          @processed = true
+        when CopyrightChecking::Event::Found
+          @copyright_state = :found
+        when CopyrightChecking::Event::NotFound
+          @copyright_state = :not_found
+        when Reviewing::Event::PhotoRejected
+          @reviewing_state = :rejected
+        when Reviewing::Event::PhotoPreApproved
+          @reviewing_state = :pre_approved
+        when Reviewing::Event::PhotoApproved
+          @reviewing_state = :approved
+        when Publishing::Event::PhotoPublished
+          @published = true
+        when Publishing::Event::PhotoUnpublished
+          @published = false
       end
     end
   end

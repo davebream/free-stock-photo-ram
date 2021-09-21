@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   root 'uploads#index'
 
-  resources :uploads, only: [:index, :create]
+  resources :uploads, only: %i(index create)
 
   resources :review, only: [:index] do
     member do
@@ -16,5 +16,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :tagging, only: [:index, :destroy, :create]
+  resources :tagging, only: %i(index destroy create)
 end

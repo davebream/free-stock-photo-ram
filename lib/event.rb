@@ -27,10 +27,10 @@ class Event < Dry::Struct
     self.class.name
   end
 
-  def ==(other_event)
-    other_event.instance_of?(self.class) &&
-      other_event.event_id.eql?(event_id) &&
-      other_event.data.eql?(data)
+  def ==(other)
+    other.instance_of?(self.class) &&
+      other.event_id.eql?(event_id) &&
+      other.data.eql?(data)
   end
 
   alias_method :eql?, :==

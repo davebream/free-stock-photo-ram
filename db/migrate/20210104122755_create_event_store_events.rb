@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateEventStoreEvents < ActiveRecord::Migration[4.2]
   def change
     postgres = ActiveRecord::Base.connection.adapter_name == "PostgreSQL"
