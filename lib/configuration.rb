@@ -23,7 +23,7 @@ class Configuration
 
     cqrs.subscribe(
       lambda do |event|
-        cqrs.run(Tagging::Command::SetFilename.new(photo_id: event.data.fetch(:photo_id), filename: event.data.fetch(:filename)))
+        cqrs.run(Tagging::Command::AssignFilename.new(photo_id: event.data.fetch(:photo_id), filename: event.data.fetch(:filename)))
       end,
       [Uploading::Event::PhotoUploaded]
     )
@@ -38,7 +38,7 @@ class Configuration
     # PROCESS MANAGERS
 
     cqrs.subscribe(
-      ImageProcessing.new(event_store: event_store, command_bus: command_bus),
+      ImageProcessing.new(event_store, command_bus),
       [
         FileProcessing::Event::DimensionsRecognized,
         FileProcessing::Event::AverageColorExtracted
@@ -46,7 +46,7 @@ class Configuration
     )
 
     cqrs.subscribe(
-      PhotoPublishing.new(event_store: event_store, command_bus: command_bus),
+      PhotoPublishing.new(event_store, command_bus),
       [
         FileProcessing::Event::ProcessingFinished,
         CopyrightChecking::Event::Found,

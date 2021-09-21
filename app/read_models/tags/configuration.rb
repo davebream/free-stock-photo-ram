@@ -5,7 +5,7 @@ module Tags
     end
 
     def call
-      @cqrs.subscribe(-> (event) { set_filename(event) }, [::Tagging::Event::FilenameSet])
+      @cqrs.subscribe(-> (event) { assign_filename(event) }, [::Tagging::Event::FilenameAssigned])
       @cqrs.subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::Event::AutoTagsAdded])
       @cqrs.subscribe(-> (event) { add_tags(event) }, [::Tagging::Event::TagsAdded])
       @cqrs.subscribe(-> (event) { remove_tag(event) }, [::Tagging::Event::TagRemoved])
@@ -13,7 +13,7 @@ module Tags
 
     private
 
-    def set_filename(event)
+    def assign_filename(event)
       with_photo(event) do |photo|
         photo.filename = event.data.fetch(:filename)
       end

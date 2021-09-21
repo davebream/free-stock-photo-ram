@@ -1,5 +1,5 @@
 class PhotoPublishing
-  def initialize(event_store:, command_bus:)
+  def initialize(event_store, command_bus)
     @event_store = event_store
     @command_bus = command_bus
   end
