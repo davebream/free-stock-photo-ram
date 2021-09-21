@@ -83,14 +83,14 @@ RSpec.describe Reviewing::Photo do
   end
 
   def photo_rejected
-    an_event(Reviewing::Event::PhotoRejected).with_data(photo_id: photo_id)
+    an_event(Reviewing::PhotoRejected).with_data(photo_id: photo_id)
   end
 
   def photo_pre_approved
-    an_event(Reviewing::Event::PhotoPreApproved).with_data(photo_id: photo_id)
+    an_event(Reviewing::PhotoPreApproved).with_data(photo_id: photo_id)
   end
 
   def photo_approved
-    an_event(Reviewing::Event::PhotoApproved).with_data(photo_id: photo_id)
+    an_event(Reviewing::PhotoApproved).with_data(photo_id: photo_id)
   end
 end

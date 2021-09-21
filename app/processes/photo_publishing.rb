@@ -94,11 +94,11 @@ class PhotoPublishing
           @copyright_state = :found
         when CopyrightChecking::Event::NotFound
           @copyright_state = :not_found
-        when Reviewing::Event::PhotoRejected
+        when Reviewing::PhotoRejected
           @reviewing_state = :rejected
-        when Reviewing::Event::PhotoPreApproved
+        when Reviewing::PhotoPreApproved
           @reviewing_state = :pre_approved
-        when Reviewing::Event::PhotoApproved
+        when Reviewing::PhotoApproved
           @reviewing_state = :approved
         when Publishing::Event::PhotoPublished
           @published = true

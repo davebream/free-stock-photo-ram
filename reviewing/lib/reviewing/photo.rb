@@ -14,12 +14,12 @@ module Reviewing
 
     def reject
       return if rejected?
-      apply Event::PhotoRejected.new(data: { photo_id: id })
+      apply PhotoRejected.new(data: { photo_id: id })
     end
 
     def pre_approve
       return if pre_approved? || approved?
-      apply Event::PhotoPreApproved.new(data: { photo_id: id })
+      apply PhotoPreApproved.new(data: { photo_id: id })
     end
 
     def approve
@@ -27,20 +27,20 @@ module Reviewing
       raise HasBeenRejected if rejected?
       raise NotYetPreApproved unless pre_approved?
 
-      apply Event::PhotoApproved.new(data: { photo_id: id })
+      apply PhotoApproved.new(data: { photo_id: id })
     end
 
     private
 
-    on Event::PhotoRejected do |_event|
+    on PhotoRejected do |event|
       @state = :rejected
     end
 
-    on Event::PhotoPreApproved do |_event|
+    on PhotoPreApproved do |event|
       @state = :pre_approved
     end
 
-    on Event::PhotoApproved do |_event|
+    on PhotoApproved do |event|
       @state = :approved
     end
 

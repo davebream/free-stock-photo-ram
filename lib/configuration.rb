@@ -32,7 +32,7 @@ class Configuration
       lambda do |event|
         cqrs.run(Tagging::Command::RequestAutoTagging.new(photo_id: event.data.fetch(:photo_id)))
       end,
-      [Reviewing::Event::PhotoApproved]
+      [Reviewing::PhotoApproved]
     )
 
     # PROCESS MANAGERS
@@ -51,9 +51,9 @@ class Configuration
         FileProcessing::Event::ProcessingFinished,
         CopyrightChecking::Event::Found,
         CopyrightChecking::Event::NotFound,
-        Reviewing::Event::PhotoRejected,
-        Reviewing::Event::PhotoPreApproved,
-        Reviewing::Event::PhotoApproved,
+        Reviewing::PhotoRejected,
+        Reviewing::PhotoPreApproved,
+        Reviewing::PhotoApproved,
         Publishing::Event::PhotoPublished,
         Publishing::Event::PhotoUnpublished
       ]

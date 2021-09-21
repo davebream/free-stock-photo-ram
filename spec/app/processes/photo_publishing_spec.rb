@@ -92,15 +92,15 @@ RSpec.describe PhotoPublishing, :in_memory do
   end
 
   def photo_rejected
-    Reviewing::Event::PhotoRejected.new(data: { photo_id: photo_id })
+    Reviewing::PhotoRejected.new(data: { photo_id: photo_id })
   end
 
   def photo_pre_approved
-    Reviewing::Event::PhotoPreApproved.new(data: { photo_id: photo_id })
+    Reviewing::PhotoPreApproved.new(data: { photo_id: photo_id })
   end
 
   def photo_approved
-    Reviewing::Event::PhotoApproved.new(data: { photo_id: photo_id })
+    Reviewing::PhotoApproved.new(data: { photo_id: photo_id })
   end
 
   def photo_published

@@ -5,10 +5,10 @@ module Reviewing
     end
 
     def call
-      @cqrs.register(Reviewing::Command::RegisterPhoto, Reviewing::PhotoService.new)
-      @cqrs.register(Reviewing::Command::PreApprovePhoto, Reviewing::PhotoService.new)
-      @cqrs.register(Reviewing::Command::ApprovePhoto, Reviewing::PhotoService.new)
-      @cqrs.register(Reviewing::Command::RejectPhoto, Reviewing::PhotoService.new)
+      @cqrs.register(Reviewing::RegisterPhoto, Reviewing::PhotoService.new)
+      @cqrs.register(Reviewing::PreApprovePhoto, Reviewing::PhotoService.new)
+      @cqrs.register(Reviewing::ApprovePhoto, Reviewing::PhotoService.new)
+      @cqrs.register(Reviewing::RejectPhoto, Reviewing::PhotoService.new)
     end
   end
 end
