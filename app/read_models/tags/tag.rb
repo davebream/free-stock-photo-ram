@@ -1,6 +1,6 @@
 module Tags
   class Tag < ApplicationRecord
-    self.table_name = 'read_model_tagging_tags'
+    self.table_name = 'read_model_tags_tags'
 
     belongs_to :photo
   end

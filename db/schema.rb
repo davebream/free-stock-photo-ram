@@ -57,23 +57,23 @@ ActiveRecord::Schema.define(version: 2021_09_17_133614) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "read_model_tagging_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "read_model_tags_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "filename"
     t.datetime "last_tagging_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "read_model_tagging_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "read_model_tags_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "photo_id"
     t.string "name", null: false
     t.string "source", null: false
     t.string "provider"
     t.datetime "added_at"
-    t.index ["photo_id"], name: "index_read_model_tagging_tags_on_photo_id"
+    t.index ["photo_id"], name: "index_read_model_tags_tags_on_photo_id"
   end
 
-  create_table "read_model_uploads_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "read_model_uploads_images", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "filename"
     t.string "path"
     t.bigint "width"
@@ -86,5 +86,5 @@ ActiveRecord::Schema.define(version: 2021_09_17_133614) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "read_model_tagging_tags", "read_model_tagging_photos", column: "photo_id"
+  add_foreign_key "read_model_tags_tags", "read_model_tags_photos", column: "photo_id"
 end
