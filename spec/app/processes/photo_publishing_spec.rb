@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe PhotoPublishing, :in_memory do
-  let(:image_id) { '6097187e-0937-42f9-923b-7ef0dd166c00' }
-  let(:photo_id) { '4a57d789-42dc-45b7-bb4a-23bae35b1928' }
+  let(:image_id) { SecureRandom.uuid }
+  let(:photo_id) { SecureRandom.uuid }
 
   subject do
     with_events(events).each do |event|
