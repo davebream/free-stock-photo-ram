@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-RSpec.describe Tagging::Command::RequestAutoTagging, :in_memory_integration do
+RSpec.describe Tagging::RequestAutoTagging, :in_memory_integration do
   let(:photo_id) { SecureRandom.uuid }
   let(:filename) { 'test.jpg' }
 
@@ -25,7 +25,7 @@ RSpec.describe Tagging::Command::RequestAutoTagging, :in_memory_integration do
   end
 
   def assign_filename
-    Tagging::Command::AssignFilename.new(photo_id: photo_id, filename: filename)
+    Tagging::AssignFilename.new(photo_id: photo_id, filename: filename)
   end
 
   def request_auto_tagging
@@ -33,7 +33,7 @@ RSpec.describe Tagging::Command::RequestAutoTagging, :in_memory_integration do
   end
 
   def add_auto_tags
-    Tagging::Command::AddAutoTags.new(
+    Tagging::AddAutoTags.new(
       photo_id: photo_id,
       tags: [{ id: SecureRandom.uuid, name: 'tag' }],
       provider: 'test_provider'
@@ -41,7 +41,7 @@ RSpec.describe Tagging::Command::RequestAutoTagging, :in_memory_integration do
   end
 
   def auto_tagging_requested
-    an_event(Tagging::Event::AutoTaggingRequested).with_data(
+    an_event(Tagging::AutoTaggingRequested).with_data(
       photo_id: photo_id,
       filename: filename
     )

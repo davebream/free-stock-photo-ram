@@ -19,7 +19,7 @@ module Tagging
         end
 
         event_store.publish(
-          Tagging::Event::AutoTagsGenerated.new(
+          Tagging::AutoTagsGenerated.new(
             data: {
               photo_id: event.data.fetch(:photo_id),
               tags: tags,

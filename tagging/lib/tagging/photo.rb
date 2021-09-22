@@ -13,42 +13,42 @@ module Tagging
     end
 
     def assign_filename(filename)
-      apply Event::FilenameAssigned.new(data: { photo_id: id, filename: filename })
+      apply FilenameAssigned.new(data: { photo_id: id, filename: filename })
     end
 
     def request_auto_tagging
       return if already_auto_tagged?
       raise MissingFilename unless filename?
 
-      apply Event::AutoTaggingRequested.new(data: { photo_id: id, filename: filename })
+      apply AutoTaggingRequested.new(data: { photo_id: id, filename: filename })
     end
 
     def add_auto_tags(tags, provider)
-      apply Event::AutoTagsAdded.new(data: { photo_id: id, tags: tags, provider: provider })
+      apply AutoTagsAdded.new(data: { photo_id: id, tags: tags, provider: provider })
     end
 
     def add_tags(tags)
-      apply Event::TagsAdded.new(data: { photo_id: id, tags: tags })
+      apply TagsAdded.new(data: { photo_id: id, tags: tags })
     end
 
     def remove_tag(tag_id)
-      apply Event::TagRemoved.new(data: { photo_id: id, tag_id: tag_id })
+      apply TagRemoved.new(data: { photo_id: id, tag_id: tag_id })
     end
 
     private
 
-    on Event::FilenameAssigned do |event|
+    on FilenameAssigned do |event|
       @filename = event.data.fetch(:filename)
     end
 
-    on Event::TagRemoved do |event|
+    on TagRemoved do |event|
       @tags.reject! { |tag| tag.id == event.data.fetch(:tag_id) }
     end
 
-    on Event::AutoTaggingRequested do |event|
+    on AutoTaggingRequested do |event|
     end
 
-    on Event::AutoTagsAdded do |event|
+    on AutoTagsAdded do |event|
       @auto_tagged = true
 
       event.data.fetch(:tags).each do |tag|
@@ -56,7 +56,7 @@ module Tagging
       end
     end
 
-    on Event::TagsAdded do |event|
+    on TagsAdded do |event|
       event.data.fetch(:tags).each do |tag|
         @tags << Tag.new(id: tag[:id], name: tag[:name], source: 'admin')
       end

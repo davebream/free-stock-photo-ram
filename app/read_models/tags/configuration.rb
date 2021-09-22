@@ -5,10 +5,10 @@ module Tags
     end
 
     def call
-      @cqrs.subscribe(-> (event) { assign_filename(event) }, [::Tagging::Event::FilenameAssigned])
-      @cqrs.subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::Event::AutoTagsAdded])
-      @cqrs.subscribe(-> (event) { add_tags(event) }, [::Tagging::Event::TagsAdded])
-      @cqrs.subscribe(-> (event) { remove_tag(event) }, [::Tagging::Event::TagRemoved])
+      @cqrs.subscribe(-> (event) { assign_filename(event) }, [::Tagging::FilenameAssigned])
+      @cqrs.subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::AutoTagsAdded])
+      @cqrs.subscribe(-> (event) { add_tags(event) }, [::Tagging::TagsAdded])
+      @cqrs.subscribe(-> (event) { remove_tag(event) }, [::Tagging::TagRemoved])
     end
 
     private

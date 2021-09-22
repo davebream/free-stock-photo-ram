@@ -43,24 +43,24 @@ RSpec.describe 'Tags Read Models', :in_memory_integration do
   end
 
   def filename_assigned
-    Tagging::Event::FilenameAssigned.new(data: { photo_id: photo_id, filename: 'test.jpg' })
+    Tagging::FilenameAssigned.new(data: { photo_id: photo_id, filename: 'test.jpg' })
   end
 
   def auto_tags_added
-    Tagging::Event::AutoTagsAdded.new(
+    Tagging::AutoTagsAdded.new(
       data: { photo_id: photo_id, tags: [{ id: auto_tag_id, name: 'auto tag' }], provider: 'test_provider' },
       metadata: { timestamp: auto_tagging_at }
     )
   end
 
   def tags_added
-    Tagging::Event::TagsAdded.new(
+    Tagging::TagsAdded.new(
       data: { photo_id: photo_id, tags: [{ id: tag_id, name: 'tag' }] },
       metadata: { timestamp: tagging_at }
     )
   end
 
   def tag_removed
-    Tagging::Event::TagRemoved.new(data: { photo_id: photo_id, tag_id: auto_tag_id })
+    Tagging::TagRemoved.new(data: { photo_id: photo_id, tag_id: auto_tag_id })
   end
 end
