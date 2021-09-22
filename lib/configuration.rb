@@ -45,15 +45,15 @@ class Configuration
     cqrs.subscribe(
       ImageProcessing.new(event_store, command_bus),
       [
-        FileProcessing::Event::DimensionsRecognized,
-        FileProcessing::Event::AverageColorExtracted
+        FileProcessing::DimensionsRecognized,
+        FileProcessing::AverageColorExtracted
       ]
     )
 
     cqrs.subscribe(
       PhotoPublishing.new(event_store, command_bus),
       [
-        FileProcessing::Event::ProcessingFinished,
+        FileProcessing::ProcessingFinished,
         CopyrightChecking::Event::Found,
         CopyrightChecking::Event::NotFound,
         Reviewing::PhotoRejected,

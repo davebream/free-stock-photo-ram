@@ -88,7 +88,7 @@ class PhotoPublishing
 
     def call(event)
       case event
-        when FileProcessing::Event::ProcessingFinished
+        when FileProcessing::ProcessingFinished
           @processed = true
         when CopyrightChecking::Event::Found
           @copyright_state = :found

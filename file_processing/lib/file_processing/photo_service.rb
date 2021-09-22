@@ -4,7 +4,7 @@ module FileProcessing
 
     def finish_processing(command)
       event_store.publish(
-        FileProcessing::Event::ProcessingFinished.new(
+        FileProcessing::ProcessingFinished.new(
           data: {
             image_id: command.image_id,
             average_color: command.average_color,

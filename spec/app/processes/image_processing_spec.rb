@@ -46,7 +46,7 @@ RSpec.describe ImageProcessing, :in_memory do
   end
 
   def dimensions_recognized
-    FileProcessing::Event::DimensionsRecognized.new(
+    FileProcessing::DimensionsRecognized.new(
       data: {
         image_id: image_id,
         width: 1920,
@@ -56,7 +56,7 @@ RSpec.describe ImageProcessing, :in_memory do
   end
 
   def average_color_extracted
-    FileProcessing::Event::AverageColorExtracted.new(
+    FileProcessing::AverageColorExtracted.new(
       data: {
         image_id: image_id,
         rgb: [31, 26, 21]
@@ -65,7 +65,7 @@ RSpec.describe ImageProcessing, :in_memory do
   end
 
   def finish_processing
-    FileProcessing::Command::FinishProcessing.new(
+    FileProcessing::FinishProcessing.new(
       image_id: image_id,
       width: 1920,
       height: 1080,

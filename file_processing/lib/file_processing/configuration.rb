@@ -5,7 +5,7 @@ module FileProcessing
     end
 
     def call
-      @cqrs.register(FileProcessing::Command::FinishProcessing, FileProcessing::PhotoService.new)
+      @cqrs.register(FileProcessing::FinishProcessing, FileProcessing::PhotoService.new)
     end
   end
 end

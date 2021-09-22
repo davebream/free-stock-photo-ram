@@ -1,4 +1,4 @@
-SUBDOMAINS = %w(reviewing).freeze
+SUBDOMAINS = %w(reviewing file_processing).freeze
 
 Rails.autoloaders.each do |autoloader|
   SUBDOMAINS.each do |sub|

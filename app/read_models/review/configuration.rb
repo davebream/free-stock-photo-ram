@@ -6,7 +6,7 @@ module Review
 
     def call
       @cqrs.subscribe(-> (event) { acknowledge_uploaded(event) }, [::Uploading::Event::ImageUploaded])
-      @cqrs.subscribe(-> (event) { acknowledge_processed(event) }, [::FileProcessing::Event::ProcessingFinished])
+      @cqrs.subscribe(-> (event) { acknowledge_processed(event) }, [::FileProcessing::ProcessingFinished])
       @cqrs.subscribe(-> (event) { set_status(event, 'rejected') }, [::Reviewing::PhotoRejected])
       @cqrs.subscribe(-> (event) { set_status(event, 'pre_approved') }, [::Reviewing::PhotoPreApproved])
       @cqrs.subscribe(-> (event) { set_status(event, 'approved') }, [::Reviewing::PhotoApproved])

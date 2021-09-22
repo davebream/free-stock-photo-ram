@@ -89,7 +89,7 @@ RSpec.describe PhotoPublishing, :in_memory do
   end
 
   def processing_finished(correlation_id = photo_id)
-    FileProcessing::Event::ProcessingFinished.new(
+    FileProcessing::ProcessingFinished.new(
       data: {
         image_id: image_id,
         average_color: [31, 26, 21],

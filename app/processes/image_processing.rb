@@ -13,7 +13,7 @@ class ImageProcessing
 
   def finish_processing(state)
     command_bus.call(
-      FileProcessing::Command::FinishProcessing.new(
+      FileProcessing::FinishProcessing.new(
         image_id: state.image_id,
         average_color: state.average_color,
         width: state.width,
@@ -61,10 +61,10 @@ class ImageProcessing
 
     def call(event)
       case event
-        when FileProcessing::Event::DimensionsRecognized
+        when FileProcessing::DimensionsRecognized
           @width = event.data.fetch(:width)
           @height = event.data.fetch(:height)
-        when FileProcessing::Event::AverageColorExtracted
+        when FileProcessing::AverageColorExtracted
           @average_color = event.data.fetch(:rgb)
       end
     end
