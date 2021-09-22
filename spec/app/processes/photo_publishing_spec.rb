@@ -20,8 +20,8 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
 
     it 'publishes the photo' do
-      expect(command_bus).to receive(:call).with(publish_photo).once
       subject
+      expect(command_bus.received).to eq(publish_photo)
     end
   end
 
@@ -35,8 +35,8 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
 
     it 'does not publish the photo' do
-      expect(command_bus).to_not receive(:call)
       subject
+      expect(command_bus.received).to be_nil
     end
   end
 
@@ -50,8 +50,8 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
 
     it 'does not publish the photo' do
-      expect(command_bus).to_not receive(:call)
       subject
+      expect(command_bus.received).to be_nil
     end
   end
 
@@ -60,13 +60,13 @@ RSpec.describe PhotoPublishing, :in_memory do
       [
         processing_finished,
         copyright_not_found,
-        photo_approved(SecureRandom.uuid)
+        photo_approved(correlation_id: SecureRandom.uuid)
       ]
     end
 
     it 'does not publish the photo' do
-      expect(command_bus).to_not receive(:call)
       subject
+      expect(command_bus.received).to be_nil
     end
   end
 
@@ -82,13 +82,13 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
 
     it 'unpublishes the photo' do
-      allow(command_bus).to receive(:call).with(publish_photo)
-      expect(command_bus).to receive(:call).with(unpublish_photo)
+      # allow(command_bus).to receive(:call).with(publish_photo)
       subject
+      expect(command_bus.received).to eq(unpublish_photo)
     end
   end
 
-  def processing_finished(correlation_id = photo_id)
+  def processing_finished(correlation_id: photo_id)
     FileProcessing::ProcessingFinished.new(
       data: {
         image_id: image_id,
@@ -101,53 +101,53 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
   end
 
-  def copyright_found(correlation_id = photo_id)
+  def copyright_found(correlation_id: photo_id)
     CopyrightChecking::Found.new(data: { image_id: image_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
-  def copyright_not_found(correlation_id = photo_id)
+  def copyright_not_found(correlation_id: photo_id)
     CopyrightChecking::NotFound.new(data: { image_id: image_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
-  def photo_rejected(correlation_id = photo_id)
+  def photo_rejected(correlation_id: photo_id)
     Reviewing::PhotoRejected.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
-  def photo_pre_approved(correlation_id = photo_id)
+  def photo_pre_approved(correlation_id: photo_id)
     Reviewing::PhotoPreApproved.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
-  def photo_approved(correlation_id = photo_id)
+  def photo_approved(correlation_id: photo_id)
     Reviewing::PhotoApproved.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
-  def photo_published(correlation_id = photo_id)
+  def photo_published(correlation_id: photo_id)
     Publishing::PhotoPublished.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
-  def photo_unpublished(correlation_id = photo_id)
+  def photo_unpublished(correlation_id: photo_id)
     Publishing::PhotoUnpublished.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
   def publish_photo
-    an_instance_of(Publishing::PublishPhoto)
+    Publishing::PublishPhoto.new(photo_id: photo_id)
   end
 
   def unpublish_photo
-    an_instance_of(Publishing::UnpublishPhoto)
+    Publishing::UnpublishPhoto.new(photo_id: photo_id)
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe 'Tags Read Models', :in_memory_integration do
   let(:tag) { Tags::Tag.find_by(id: tag_id) }
   let(:tagging_at) { Time.new(2021, 9, 20, 21, 10).in_time_zone }
 
-  it 'persists changes based on events' do
+  it 'changes records basing on events' do
     event_store.publish(filename_assigned)
     event_store.publish(auto_tags_added)
     event_store.publish(tags_added)
