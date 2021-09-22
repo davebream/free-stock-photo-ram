@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_17_133614) do
+ActiveRecord::Schema.define(version: 2021_09_22_161524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -37,14 +37,6 @@ ActiveRecord::Schema.define(version: 2021_09_17_133614) do
     t.index ["created_at"], name: "index_event_store_events_in_streams_on_created_at"
     t.index ["stream", "event_id"], name: "index_event_store_events_in_streams_on_stream_and_event_id", unique: true
     t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
-  end
-
-  create_table "read_model_media", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "status"
-    t.string "copyright"
-    t.datetime "publish_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "read_model_review_photos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -75,7 +67,6 @@ ActiveRecord::Schema.define(version: 2021_09_17_133614) do
 
   create_table "read_model_uploads_images", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "filename"
-    t.string "path"
     t.bigint "width"
     t.bigint "height"
     t.bigint "average_color_red"
