@@ -26,7 +26,11 @@ class ApplicationController < ActionController::Base
     Rails.configuration.event_store.with_metadata(request_metadata, &block)
   end
 
+  def with_transaction(&block)
+    ActiveRecord::Base.transaction(&block)
+  end
+
   def request_metadata
-    { user_id: current_user.id, username: current_user.full_name }
+    { user_id: current_user.id, user_email: current_user.email }
   end
 end
