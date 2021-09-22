@@ -1,6 +1,6 @@
 class UploadsController < ApplicationController
   def index
-    @uploads = Uploads::Photo.order(uploaded_at: :desc)
+    @uploads = Uploads::Image.order(uploaded_at: :desc)
 
     render :index
   end
@@ -8,9 +8,12 @@ class UploadsController < ApplicationController
   def create
     params[:files].each do |file|
       photo_id = SecureRandom.uuid
+      image_id = SecureRandom.uuid
+
+      uploading_service = ::UploadImage.new(photo_id, file)
 
       ActiveRecord::Base.transaction do
-        Uploading::UploadPhoto.call(photo_id, file)
+        Uploading::UploadPhoto.new(uploading_service).call(image_id)
       end
     end
 

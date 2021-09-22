@@ -16,7 +16,7 @@ module Uploads
     def rebuild
       call
 
-      Uploads::Photo.delete_all
+      Uploads::Image.delete_all
 
       @cqrs.event_store.read.of_type(@subscriptions.keys).each do |event|
         @subscriptions[event.class.to_s].each do |handler|
@@ -28,30 +28,30 @@ module Uploads
     private
 
     def acknowledge_uploaded(event)
-      with_photo(event) do |photo|
-        photo.filename = event.data.fetch(:filename)
-        photo.path = event.data.fetch(:path)
-        photo.uploaded_at = event.timestamp
+      with_image(event) do |image|
+        image.filename = event.data.fetch(:filename)
+        image.path = event.data.fetch(:path)
+        image.uploaded_at = event.timestamp
       end
     end
 
     def set_average_color(event)
-      with_photo(event) do |photo|
-        photo.average_color = event.data.fetch(:rgb)
+      with_image(event) do |image|
+        image.average_color = event.data.fetch(:rgb)
       end
     end
 
     def set_dimensions(event)
-      with_photo(event) do |photo|
-        photo.width = event.data.fetch(:width)
-        photo.height = event.data.fetch(:height)
+      with_image(event) do |image|
+        image.width = event.data.fetch(:width)
+        image.height = event.data.fetch(:height)
       end
     end
 
-    def with_photo(event)
-      Uploads::Photo.find_or_initialize_by(id: event.data.fetch(:photo_id)).tap do |photo|
-        yield photo
-        photo.save!
+    def with_image(event)
+      Uploads::Image.find_or_initialize_by(id: event.data.fetch(:image_id)).tap do |image|
+        yield image
+        image.save!
       end
     end
 

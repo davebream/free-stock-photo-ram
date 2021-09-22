@@ -6,7 +6,7 @@ module FileProcessing
       event_store.publish(
         FileProcessing::Event::ProcessingFinished.new(
           data: {
-            photo_id: command.photo_id,
+            image_id: command.image_id,
             average_color: command.average_color,
             width: command.width,
             height: command.height

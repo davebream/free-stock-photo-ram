@@ -13,7 +13,7 @@ module CopyrightChecking
         event_klass = [Event::Found, Event::NotFound].sample
 
         event_store.publish(
-          event_klass.new(data: { photo_id: event.data.fetch(:photo_id) })
+          event_klass.new(data: { image_id: event.data.fetch(:image_id) })
         )
       end
     end

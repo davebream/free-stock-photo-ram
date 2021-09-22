@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe PhotoPublishing, :in_memory do
+  let(:image_id) { '6097187e-0937-42f9-923b-7ef0dd166c00' }
   let(:photo_id) { '4a57d789-42dc-45b7-bb4a-23bae35b1928' }
 
   subject do
@@ -90,7 +91,7 @@ RSpec.describe PhotoPublishing, :in_memory do
   def processing_finished(correlation_id = photo_id)
     FileProcessing::Event::ProcessingFinished.new(
       data: {
-        photo_id: photo_id,
+        image_id: image_id,
         average_color: [31, 26, 21],
         width: 1920,
         height: 1089
@@ -101,13 +102,13 @@ RSpec.describe PhotoPublishing, :in_memory do
   end
 
   def copyright_found(correlation_id = photo_id)
-    CopyrightChecking::Event::Found.new(data: { photo_id: photo_id }).tap do |event|
+    CopyrightChecking::Event::Found.new(data: { image_id: image_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
   def copyright_not_found(correlation_id = photo_id)
-    CopyrightChecking::Event::NotFound.new(data: { photo_id: photo_id }).tap do |event|
+    CopyrightChecking::Event::NotFound.new(data: { image_id: image_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end

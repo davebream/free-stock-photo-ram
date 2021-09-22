@@ -14,7 +14,7 @@ class ImageProcessing
   def finish_processing(state)
     command_bus.call(
       FileProcessing::Command::FinishProcessing.new(
-        photo_id: state.id,
+        image_id: state.image_id,
         average_color: state.average_color,
         width: state.width,
         height: state.height
@@ -23,14 +23,13 @@ class ImageProcessing
   end
 
   def build_state(event)
-    # correlation_id may be an UUID or in namespace:command_class:uuid format
-    id = event.correlation_id.split(':').last
-    stream_name = "ImageProcessing$#{id}"
+    image_id = event.data.fetch(:image_id)
+    stream_name = "ImageProcessing$#{image_id}"
     past_events = event_store.read.stream(stream_name).to_a
     last_stored = past_events.size - 1
     event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
 
-    ProcessState.new(id).tap do |state|
+    ProcessState.new(image_id).tap do |state|
       past_events.each { |ev| state.call(ev) }
       state.call(event)
     end
@@ -39,10 +38,10 @@ class ImageProcessing
   end
 
   class ProcessState
-    attr_reader :id, :average_color, :width, :height
+    attr_reader :image_id, :average_color, :width, :height
 
-    def initialize(id)
-      @id = id
+    def initialize(image_id)
+      @image_id = image_id
       @average_color = nil
       @width = nil
       @height = nil

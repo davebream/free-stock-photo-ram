@@ -15,7 +15,7 @@ module FileProcessing
         event_store.publish(
           FileProcessing::Event::AverageColorExtracted.new(
             data: {
-              photo_id: event.data.fetch(:photo_id),
+              image_id: event.data.fetch(:image_id),
               rgb: rgb
             }
           )

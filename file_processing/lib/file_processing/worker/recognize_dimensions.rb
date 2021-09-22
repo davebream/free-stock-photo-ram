@@ -16,7 +16,7 @@ module FileProcessing
         event_store.publish(
           FileProcessing::Event::DimensionsRecognized.new(
             data: {
-              photo_id: event.data.fetch(:photo_id),
+              image_id: event.data.fetch(:image_id),
               width: width,
               height: height
             }

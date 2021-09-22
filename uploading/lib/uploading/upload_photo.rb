@@ -1,36 +1,33 @@
 module Uploading
   class UploadPhoto
-    class << self
-      def call(photo_id, file)
-        filename = photo_id + File.extname(file)
-        url_path = File.join('images', filename)
-        path = File.join(Rails.public_path, url_path)
-        IO.binwrite(path, file.read)
+    def initialize(uploading_service)
+      @uploading_service = uploading_service
+    end
 
-        publish_photo_uploaded_event(photo_id, filename, path, url_path)
-      end
-
-      private
-
-      def publish_photo_uploaded_event(photo_id, filename, path, url_path)
+    def call(image_id)
+      uploading_service.call do |correlation_id, filename, url_path, path|
         event_store.publish(
           Uploading::Event::PhotoUploaded.new(
             data: {
-              photo_id: photo_id,
+              image_id: image_id,
               filename: filename,
               path: path,
               url_path: url_path
             },
             metadata: {
-              correlation_id: photo_id
+              correlation_id: correlation_id
             }
           )
         )
       end
+    end
 
-      def event_store
-        Rails.configuration.event_store
-      end
+    private
+
+    attr_reader :uploading_service
+
+    def event_store
+      Rails.configuration.event_store
     end
   end
 end
