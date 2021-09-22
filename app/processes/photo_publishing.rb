@@ -15,11 +15,11 @@ class PhotoPublishing
   private
 
   def publish(state)
-    command_bus.call(Publishing::Command::PublishPhoto.new(photo_id: state.photo_id))
+    command_bus.call(Publishing::PublishPhoto.new(photo_id: state.photo_id))
   end
 
   def unpublish(state)
-    command_bus.call(Publishing::Command::UnpublishPhoto.new(photo_id: state.photo_id))
+    command_bus.call(Publishing::UnpublishPhoto.new(photo_id: state.photo_id))
   end
 
   attr_reader :event_store, :command_bus
@@ -100,9 +100,9 @@ class PhotoPublishing
           @reviewing_state = :pre_approved
         when Reviewing::PhotoApproved
           @reviewing_state = :approved
-        when Publishing::Event::PhotoPublished
+        when Publishing::PhotoPublished
           @published = true
-        when Publishing::Event::PhotoUnpublished
+        when Publishing::PhotoUnpublished
           @published = false
       end
     end

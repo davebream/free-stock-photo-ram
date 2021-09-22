@@ -59,8 +59,8 @@ class Configuration
         Reviewing::PhotoRejected,
         Reviewing::PhotoPreApproved,
         Reviewing::PhotoApproved,
-        Publishing::Event::PhotoPublished,
-        Publishing::Event::PhotoUnpublished
+        Publishing::PhotoPublished,
+        Publishing::PhotoUnpublished
       ]
     )
   end

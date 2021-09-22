@@ -132,22 +132,22 @@ RSpec.describe PhotoPublishing, :in_memory do
   end
 
   def photo_published(correlation_id = photo_id)
-    Publishing::Event::PhotoPublished.new(data: { photo_id: photo_id }).tap do |event|
+    Publishing::PhotoPublished.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
   def photo_unpublished(correlation_id = photo_id)
-    Publishing::Event::PhotoUnpublished.new(data: { photo_id: photo_id }).tap do |event|
+    Publishing::PhotoUnpublished.new(data: { photo_id: photo_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
   def publish_photo
-    an_instance_of(Publishing::Command::PublishPhoto)
+    an_instance_of(Publishing::PublishPhoto)
   end
 
   def unpublish_photo
-    an_instance_of(Publishing::Command::UnpublishPhoto)
+    an_instance_of(Publishing::UnpublishPhoto)
   end
 end

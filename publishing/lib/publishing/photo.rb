@@ -10,22 +10,22 @@ module Publishing
     def publish
       return if published?
 
-      apply Event::PhotoPublished.new(data: { photo_id: @id })
+      apply PhotoPublished.new(data: { photo_id: @id })
     end
 
     def unpublish
       return if unpublished?
 
-      apply Event::PhotoUnpublished.new(data: { photo_id: @id })
+      apply PhotoUnpublished.new(data: { photo_id: @id })
     end
 
     private
 
-    on Event::PhotoPublished do |_event|
+    on PhotoPublished do |_event|
       @published = true
     end
 
-    on Event::PhotoUnpublished do |_event|
+    on PhotoUnpublished do |_event|
       @published = false
     end
 
