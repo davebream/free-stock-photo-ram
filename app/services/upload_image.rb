@@ -6,11 +6,10 @@ class UploadImage
 
   def call
     filename = photo_id + File.extname(file)
-    url_path = File.join('images', filename)
-    path = File.join(Rails.public_path, url_path)
+    path = File.join(Rails.public_path, 'images', filename)
     IO.binwrite(path, file.read)
 
-    yield photo_id, filename, url_path, path if block_given?
+    yield photo_id, filename if block_given?
   end
 
   private

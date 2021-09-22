@@ -13,7 +13,7 @@ class UploadsController < ApplicationController
       uploading_service = ::UploadImage.new(photo_id, file)
 
       ActiveRecord::Base.transaction do
-        Uploading::UploadPhoto.new(uploading_service).call(image_id)
+        Uploading::UploadImage.new(uploading_service).call(image_id)
       end
     end
 

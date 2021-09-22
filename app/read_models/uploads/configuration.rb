@@ -8,7 +8,7 @@ module Uploads
     end
 
     def call
-      subscribe(-> (event) { acknowledge_uploaded(event) }, [Uploading::Event::PhotoUploaded])
+      subscribe(-> (event) { acknowledge_uploaded(event) }, [Uploading::Event::ImageUploaded])
       subscribe(-> (event) { set_average_color(event) }, [FileProcessing::Event::AverageColorExtracted])
       subscribe(-> (event) { set_dimensions(event) }, [FileProcessing::Event::DimensionsRecognized])
     end
@@ -30,7 +30,6 @@ module Uploads
     def acknowledge_uploaded(event)
       with_image(event) do |image|
         image.filename = event.data.fetch(:filename)
-        image.path = event.data.fetch(:path)
         image.uploaded_at = event.timestamp
       end
     end
