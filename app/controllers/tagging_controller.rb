@@ -12,7 +12,8 @@ class TaggingController < ApplicationController
           photo_id: params[:photo_id],
           tags: params[:tags].strip.split(',').map do |tag|
             { id: SecureRandom.uuid, name: tag.strip }
-          end
+          end,
+          correlation_id: params[:photo_id]
         )
       )
     end
@@ -23,7 +24,11 @@ class TaggingController < ApplicationController
   def destroy
     ActiveRecord::Base.transaction do
       command_bus.call(
-        Tagging::Command::RemoveTag.new(photo_id: params[:id], tag_id: params[:tag_id])
+        Tagging::Command::RemoveTag.new(
+          photo_id: params[:id],
+          tag_id: params[:tag_id],
+          correlation_id: params[:id]
+        )
       )
     end
 
