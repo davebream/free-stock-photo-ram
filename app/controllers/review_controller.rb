@@ -6,24 +6,24 @@ class ReviewController < ApplicationController
   end
 
   def reject
-    ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::RejectPhoto.new(photo_id: params[:id]))
+    with_transaction do
+      command_bus.call(reject_photo_command)
     end
 
     redirect_to action: 'index'
   end
 
   def pre_approve
-    ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::PreApprovePhoto.new(photo_id: params[:id]))
+    with_transaction do
+      command_bus.call(pre_approve_photo_command)
     end
 
     redirect_to action: 'index'
   end
 
   def approve
-    ActiveRecord::Base.transaction do
-      command_bus.call(Reviewing::ApprovePhoto.new(photo_id: params[:id]))
+    with_transaction do
+      command_bus.call(approve_photo_command)
     end
 
     redirect_to action: 'index'
@@ -40,5 +40,19 @@ class ReviewController < ApplicationController
     end
 
     redirect_to action: 'index'
+  end
+
+  private
+
+  def reject_photo_command
+    Reviewing::RejectPhoto.new(photo_id: params[:id])
+  end
+
+  def pre_approve_photo_command
+    Reviewing::PreApprovePhoto.new(photo_id: params[:id])
+  end
+
+  def approve_photo_command
+    Reviewing::ApprovePhoto.new(photo_id: params[:id])
   end
 end

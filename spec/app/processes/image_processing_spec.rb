@@ -45,22 +45,38 @@ RSpec.describe ImageProcessing, :in_memory do
     end
   end
 
-  def dimensions_recognized
+  context 'with incompatible correlation ids' do
+    let(:events) do
+      [
+        dimensions_recognized,
+        average_color_extracted(SecureRandom.uuid)
+      ]
+    end
+
+    it 'does not finish_processing' do
+      subject
+      expect(command_bus.received).to be_nil
+    end
+  end
+
+  def dimensions_recognized(correlation_id = photo_id)
     FileProcessing::Event::DimensionsRecognized.new(
       data: {
         photo_id: photo_id,
         width: 1920,
         height: 1080
-      }
+      },
+      metadata: { correlation_id: correlation_id }
     )
   end
 
-  def average_color_extracted
+  def average_color_extracted(correlation_id = photo_id)
     FileProcessing::Event::AverageColorExtracted.new(
       data: {
         photo_id: photo_id,
         rgb: [31, 26, 21]
-      }
+      },
+      metadata: { correlation_id: correlation_id }
     )
   end
 

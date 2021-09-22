@@ -1,5 +1,10 @@
 class Configuration
   def call(event_store, command_bus)
+    event_store.subscribe_to_all_events(RailsEventStore::LinkByEventType.new)
+    event_store.subscribe_to_all_events(RailsEventStore::LinkByCorrelationId.new)
+    event_store.subscribe_to_all_events(RailsEventStore::LinkByMetadata.new(event_store: event_store, key: :user_id))
+    event_store.subscribe_to_all_events(RailsEventStore::LinkByMetadata.new(event_store: event_store, key: :user_email))
+
     cqrs = CQRS.new(event_store, command_bus)
 
     # READ MODELS

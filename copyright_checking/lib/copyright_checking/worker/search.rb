@@ -4,6 +4,7 @@ module CopyrightChecking
       include FreeStockPhotoWorker
 
       prepend MetadataHandler
+      prepend RailsEventStore::CorrelatedHandler
       prepend RailsEventStore::AsyncHandler
 
       def perform(event)

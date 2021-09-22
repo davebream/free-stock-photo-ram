@@ -25,7 +25,8 @@ class PhotoPublishing
   attr_reader :event_store, :command_bus
 
   def build_state(event)
-    photo_id = event.data.fetch(:photo_id)
+    # correlation_id may be an UUID or in namespace:command_class:uuid format
+    photo_id = event.correlation_id.split(':').last
     stream_name = "PhotoPublishing$#{photo_id}"
     past_events = event_store.read.stream(stream_name).to_a
     last_stored = past_events.size - 1

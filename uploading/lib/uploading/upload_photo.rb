@@ -13,16 +13,23 @@ module Uploading
       private
 
       def publish_photo_uploaded_event(photo_id, filename, path, url_path)
-        Rails.configuration.event_store.publish(
+        event_store.publish(
           Uploading::Event::PhotoUploaded.new(
             data: {
               photo_id: photo_id,
               filename: filename,
               path: path,
               url_path: url_path
+            },
+            metadata: {
+              correlation_id: photo_id
             }
           )
         )
+      end
+
+      def event_store
+        Rails.configuration.event_store
       end
     end
   end

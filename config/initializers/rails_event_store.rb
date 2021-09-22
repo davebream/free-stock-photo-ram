@@ -10,11 +10,16 @@ Rails.configuration.to_prepare do
     )
   )
 
-  Rails.configuration.command_bus = Arkency::CommandBus.new
+  command_bus = Arkency::CommandBus.new
 
   AggregateRoot.configure do |config|
     config.default_event_store = Rails.configuration.event_store
   end
 
-  ::Configuration.new.call(Rails.configuration.event_store, Rails.configuration.command_bus)
+  ::Configuration.new.call(Rails.configuration.event_store, command_bus)
+
+  Rails.configuration.command_bus = RubyEventStore::CorrelatedCommands.new(
+    Rails.configuration.event_store,
+    command_bus
+  )
 end
