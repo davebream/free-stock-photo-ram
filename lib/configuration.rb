@@ -22,15 +22,15 @@ class Configuration
 
     # EVENT HANDLERS
 
-    cqrs.subscribe(CopyrightChecking::Worker::Search, [::Uploading::Event::ImageUploaded])
-    cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::Event::ImageUploaded])
-    cqrs.subscribe(FileProcessing::Worker::RecognizeDimensions, [::Uploading::Event::ImageUploaded])
+    cqrs.subscribe(CopyrightChecking::Worker::Search, [::Uploading::ImageUploaded])
+    cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::ImageUploaded])
+    cqrs.subscribe(FileProcessing::Worker::RecognizeDimensions, [::Uploading::ImageUploaded])
 
     cqrs.subscribe(
       lambda do |event|
         cqrs.run(Tagging::AssignFilename.new(photo_id: event.correlation_id, filename: event.data.fetch(:filename)))
       end,
-      [Uploading::Event::ImageUploaded]
+      [Uploading::ImageUploaded]
     )
 
     cqrs.subscribe(

@@ -7,7 +7,7 @@ module Uploading
     def call(image_id)
       uploading_service.call do |correlation_id, filename|
         event_store.publish(
-          Uploading::Event::ImageUploaded.new(
+          Uploading::ImageUploaded.new(
             data: { image_id: image_id, filename: filename },
             metadata: { correlation_id: correlation_id }
           )

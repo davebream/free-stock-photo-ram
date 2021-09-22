@@ -8,7 +8,7 @@ module Uploads
     end
 
     def call
-      subscribe(-> (event) { acknowledge_uploaded(event) }, [Uploading::Event::ImageUploaded])
+      subscribe(-> (event) { acknowledge_uploaded(event) }, [Uploading::ImageUploaded])
       subscribe(-> (event) { set_average_color(event) }, [FileProcessing::AverageColorExtracted])
       subscribe(-> (event) { set_dimensions(event) }, [FileProcessing::DimensionsRecognized])
     end
