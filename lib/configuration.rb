@@ -28,7 +28,7 @@ class Configuration
 
     cqrs.subscribe(
       lambda do |event|
-        cqrs.run(Tagging::Command::AssignFilename.new(photo_id: event.data.fetch(:photo_id), filename: event.data.fetch(:filename)))
+        cqrs.run(Tagging::Command::AssignFilename.new(photo_id: event.correlation_id, filename: event.data.fetch(:filename)))
       end,
       [Uploading::Event::PhotoUploaded]
     )

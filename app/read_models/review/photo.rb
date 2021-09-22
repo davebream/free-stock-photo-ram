@@ -6,16 +6,6 @@ module Review
       publish_at.present?
     end
 
-    def stream_links
-      [
-        'Reviewing::Photo',
-        'Publishing::Photo',
-        'Tagging::Photo',
-        'PhotoPublishing',
-        'ImageProcessing'
-      ].map { |stream_name| { name: stream_name, url: "http://localhost:3000/res/streams/#{stream_name}$#{id}" } }
-    end
-
     def self.set_status(id, status)
       set_attribute(id, :status, status)
     end

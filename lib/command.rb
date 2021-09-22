@@ -11,7 +11,9 @@ class Command < Dry::Struct
 
   def self.inherited(klass)
     super
+    klass.attribute :message_id, Types::UUID.default { SecureRandom.uuid }
     klass.attribute :correlation_id, Types::UUID.default { nil }
+    klass.attribute :causation_id, Types::UUID.default { nil }
   end
 
   def correlate_with(other_message)
@@ -19,7 +21,13 @@ class Command < Dry::Struct
     self.causation_id   = other_message.message_id
   end
 
-  def message_id
-    self.class.name.underscore.parameterize.tr('-', ':').concat(':', aggregate_id)
+  def data
+    to_h.except(:message_id)
   end
+
+  def ==(other)
+    other.instance_of?(self.class) && other.data.eql?(data)
+  end
+
+  alias_method :eql?, :==
 end

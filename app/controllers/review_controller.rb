@@ -45,14 +45,14 @@ class ReviewController < ApplicationController
   private
 
   def reject_photo_command
-    Reviewing::RejectPhoto.new(photo_id: params[:id])
+    Reviewing::RejectPhoto.new(photo_id: params[:id], correlation_id: params[:id])
   end
 
   def pre_approve_photo_command
-    Reviewing::PreApprovePhoto.new(photo_id: params[:id])
+    Reviewing::PreApprovePhoto.new(photo_id: params[:id], correlation_id: params[:id])
   end
 
   def approve_photo_command
-    Reviewing::ApprovePhoto.new(photo_id: params[:id])
+    Reviewing::ApprovePhoto.new(photo_id: params[:id], correlation_id: params[:id])
   end
 end

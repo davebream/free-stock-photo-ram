@@ -6,9 +6,6 @@
           Photo
         </th>
         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Event Streams
-        </th>
-        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
           Status
         </th>
         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -29,11 +26,6 @@
             <div class="flex items-center h-40 w-40">
               <%= image_tag photo.filename, skip_pipeline: true, class: 'object-cover h-full w-full' %>
             </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <% photo.stream_links.each do |stream_link| %>
-              <a class="block text-blue-600 hover:text-blue-900" href="<%= stream_link[:url] %>" target=><%= stream_link[:name] %></a>
-            <% end %>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="text-sm text-gray-900"><%= photo.status %></div>
