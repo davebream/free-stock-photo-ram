@@ -102,13 +102,13 @@ RSpec.describe PhotoPublishing, :in_memory do
   end
 
   def copyright_found(correlation_id = photo_id)
-    CopyrightChecking::Event::Found.new(data: { image_id: image_id }).tap do |event|
+    CopyrightChecking::Found.new(data: { image_id: image_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end
 
   def copyright_not_found(correlation_id = photo_id)
-    CopyrightChecking::Event::NotFound.new(data: { image_id: image_id }).tap do |event|
+    CopyrightChecking::NotFound.new(data: { image_id: image_id }).tap do |event|
       event.correlation_id = correlation_id
     end
   end

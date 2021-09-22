@@ -12,8 +12,8 @@ module Review
       @cqrs.subscribe(-> (event) { set_status(event, 'approved') }, [::Reviewing::PhotoApproved])
       @cqrs.subscribe(-> (event) { mark_as_published(event) }, [::Publishing::Event::PhotoPublished])
       @cqrs.subscribe(-> (event) { mark_as_unpublished(event) }, [::Publishing::Event::PhotoUnpublished])
-      @cqrs.subscribe(-> (event) { set_copyright(event, 'found') }, [::CopyrightChecking::Event::Found])
-      @cqrs.subscribe(-> (event) { set_copyright(event, 'ok') }, [::CopyrightChecking::Event::NotFound])
+      @cqrs.subscribe(-> (event) { set_copyright(event, 'found') }, [::CopyrightChecking::Found])
+      @cqrs.subscribe(-> (event) { set_copyright(event, 'ok') }, [::CopyrightChecking::NotFound])
     end
 
     private

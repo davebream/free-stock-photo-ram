@@ -54,8 +54,8 @@ class Configuration
       PhotoPublishing.new(event_store, command_bus),
       [
         FileProcessing::ProcessingFinished,
-        CopyrightChecking::Event::Found,
-        CopyrightChecking::Event::NotFound,
+        CopyrightChecking::Found,
+        CopyrightChecking::NotFound,
         Reviewing::PhotoRejected,
         Reviewing::PhotoPreApproved,
         Reviewing::PhotoApproved,
