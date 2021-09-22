@@ -32,15 +32,15 @@ module Reviewing
 
     private
 
-    on PhotoRejected do |event|
+    on PhotoRejected do |_event|
       @state = :rejected
     end
 
-    on PhotoPreApproved do |event|
+    on PhotoPreApproved do |_event|
       @state = :pre_approved
     end
 
-    on PhotoApproved do |event|
+    on PhotoApproved do |_event|
       @state = :approved
     end
 

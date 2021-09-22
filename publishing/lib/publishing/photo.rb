@@ -21,11 +21,11 @@ module Publishing
 
     private
 
-    on Event::PhotoPublished do |event|
+    on Event::PhotoPublished do |_event|
       @published = true
     end
 
-    on Event::PhotoUnpublished do |event|
+    on Event::PhotoUnpublished do |_event|
       @published = false
     end
 

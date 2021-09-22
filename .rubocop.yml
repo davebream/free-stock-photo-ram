@@ -124,6 +124,9 @@ Performance/Casecmp:
 Rails/CreateTableWithTimestamps:
   Enabled: false
 
+Rails/ReversibleMigration:
+  Enabled: false
+
 Rails/SkipsModelValidations:
   Enabled: false
 
