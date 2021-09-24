@@ -1,4 +1,10 @@
 module CommandHandler
+  def self.included(base)
+    base.class_eval do
+      include Dry::Monads[:result]
+    end
+  end
+
   def call(command)
     __send__(command.class.name.demodulize.underscore, command)
   end
@@ -12,6 +18,10 @@ module CommandHandler
 
   def stream_name(aggregate_class, aggregate_id)
     "#{aggregate_class.name}$#{aggregate_id}"
+  end
+
+  def with_transaction(&block)
+    ActiveRecord::Base.transaction(&block)
   end
 
   private

@@ -26,11 +26,13 @@ class ReviewController < ApplicationController
   end
 
   def approve
-    result = ApprovePhoto.new.call(params[:id])
+    result = command_bus.call(
+      Reviewing::ApprovePhoto.new(photo_id: params[:id], correlation_id: params[:id])
+    )
 
     if result.failure?
       flash.keep
-      flash[:error] = result.failure[:message]
+      flash[:error] = result.failure
     end
 
     redirect_to action: 'index'
