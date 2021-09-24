@@ -84,6 +84,8 @@ Metrics/AbcSize:
     - app/processes/**/*
     - /**/configuration.rb
     - db/migrate/*.rb
+    - tagging/lib/**/*
+    - app/read_models/*.rb
 
 Metrics/BlockLength:
   CountAsOne: ['array', 'hash']
@@ -107,13 +109,14 @@ Metrics/MethodLength:
   Exclude:
     - app/processes/**/*
     - /**/configuration.rb
+    - tagging/lib/**/*
 
 Metrics/ModuleLength:
   CountAsOne: ['array', 'hash']
 
 Naming/AccessorMethodName:
   Exclude:
-    - /**/configuration.rb
+    - app/read_models/**/*
 
 Naming/VariableNumber:
   CheckSymbols: false
