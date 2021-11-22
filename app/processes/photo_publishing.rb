@@ -25,7 +25,7 @@ class PhotoPublishing
   attr_reader :event_store, :command_bus
 
   def build_state(event)
-    photo_id = event.correlation_id
+    photo_id = stream_id(event)
     stream_name = "PhotoPublishing$#{photo_id}"
     past_events = event_store.read.stream(stream_name).to_a
     last_stored = past_events.size - 1
@@ -37,6 +37,15 @@ class PhotoPublishing
     end
   rescue RubyEventStore::WrongExpectedEventVersion
     retry
+  end
+
+  def stream_id(event)
+    case event
+      when FileProcessing::ProcessingFinished, CopyrightChecking::Found, CopyrightChecking::NotFound
+        event.data.fetch(:image_id)
+      else
+        event.data.fetch(:photo_id)
+    end
   end
 
   class ProcessState

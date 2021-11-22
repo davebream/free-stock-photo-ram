@@ -14,5 +14,8 @@ Rails.configuration.to_prepare do
 
   ::Configuration.new.call(Rails.configuration.event_store, command_bus)
 
-  Rails.configuration.command_bus = ::CorrelatedCommands.new(Rails.configuration.event_store, command_bus)
+  Rails.configuration.command_bus = RubyEventStore::CorrelatedCommands.new(
+    Rails.configuration.event_store,
+    command_bus
+  )
 end

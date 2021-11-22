@@ -60,7 +60,7 @@ RSpec.describe PhotoPublishing, :in_memory do
       [
         processing_finished,
         copyright_not_found,
-        photo_approved(correlation_id: SecureRandom.uuid)
+        photo_approved(id: SecureRandom.uuid)
       ]
     end
 
@@ -88,59 +88,43 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
   end
 
-  def processing_finished(correlation_id: photo_id)
+  def processing_finished(id: photo_id)
     FileProcessing::ProcessingFinished.new(
       data: {
-        image_id: image_id,
+        image_id: id,
         average_color: [31, 26, 21],
         width: 1920,
         height: 1089
       }
-    ).tap do |event|
-      event.correlation_id = correlation_id
-    end
+    )
   end
 
-  def copyright_found(correlation_id: photo_id)
-    CopyrightChecking::Found.new(data: { image_id: image_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def copyright_found(id: photo_id)
+    CopyrightChecking::Found.new(data: { image_id: id })
   end
 
-  def copyright_not_found(correlation_id: photo_id)
-    CopyrightChecking::NotFound.new(data: { image_id: image_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def copyright_not_found(id: photo_id)
+    CopyrightChecking::NotFound.new(data: { image_id: id })
   end
 
-  def photo_rejected(correlation_id: photo_id)
-    Reviewing::PhotoRejected.new(data: { photo_id: photo_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def photo_rejected(id: photo_id)
+    Reviewing::PhotoRejected.new(data: { photo_id: id })
   end
 
-  def photo_pre_approved(correlation_id: photo_id)
-    Reviewing::PhotoPreApproved.new(data: { photo_id: photo_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def photo_pre_approved(id: photo_id)
+    Reviewing::PhotoPreApproved.new(data: { photo_id: id })
   end
 
-  def photo_approved(correlation_id: photo_id)
-    Reviewing::PhotoApproved.new(data: { photo_id: photo_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def photo_approved(id: photo_id)
+    Reviewing::PhotoApproved.new(data: { photo_id: id })
   end
 
-  def photo_published(correlation_id: photo_id)
-    Publishing::PhotoPublished.new(data: { photo_id: photo_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def photo_published(id: photo_id)
+    Publishing::PhotoPublished.new(data: { photo_id: id })
   end
 
-  def photo_unpublished(correlation_id: photo_id)
-    Publishing::PhotoUnpublished.new(data: { photo_id: photo_id }).tap do |event|
-      event.correlation_id = correlation_id
-    end
+  def photo_unpublished(id: photo_id)
+    Publishing::PhotoUnpublished.new(data: { photo_id: id })
   end
 
   def publish_photo

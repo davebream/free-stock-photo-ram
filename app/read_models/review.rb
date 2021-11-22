@@ -37,13 +37,13 @@ module Review
     end
 
     def set_copyright(event, copyright)
-      with_photo_by_correlation(event) do |photo|
+      with_photo_by_image_id(event) do |photo|
         photo.copyright = copyright
       end
     end
 
     def acknowledge_uploaded(event)
-      with_photo_by_correlation(event) do |photo|
+      with_photo_by_image_id(event) do |photo|
         photo.filename = event.data.fetch(:filename)
         photo.status = 'uploaded'
         photo.uploaded_at = event.timestamp
@@ -51,7 +51,7 @@ module Review
     end
 
     def acknowledge_processed(event)
-      with_photo_by_correlation(event) do |photo|
+      with_photo_by_image_id(event) do |photo|
         photo.status = 'processed'
       end
     end
@@ -63,8 +63,8 @@ module Review
       end
     end
 
-    def with_photo_by_correlation(event)
-      Review::Photo.find_or_initialize_by(id: event.correlation_id).tap do |photo|
+    def with_photo_by_image_id(event)
+      Review::Photo.find_or_initialize_by(id: event.image_id).tap do |photo|
         yield photo
         photo.save!
       end
