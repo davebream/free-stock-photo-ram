@@ -5,70 +5,55 @@ module Tags
     end
 
     def call
-      @cqrs.subscribe(-> (event) { assign_filename(event) }, [::Tagging::FilenameAssigned])
-      @cqrs.subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::AutoTagsAdded])
-      @cqrs.subscribe(-> (event) { add_tags(event) }, [::Tagging::TagsAdded])
-      @cqrs.subscribe(-> (event) { remove_tag(event) }, [::Tagging::TagRemoved])
+      @cqrs.subscribe(-> (event) { index_tags(event) }, [::Tagging::AutoTagsAdded])
+      @cqrs.subscribe(-> (event) { index_tags(event) }, [::Tagging::TagsAdded])
+      @cqrs.subscribe(-> (event) { delete_tag(event) }, [::Tagging::TagRemoved])
     end
 
-    private
+    delegate :index_tags, :delete_tag, to: :class
+    class << self
+      def rebuild
+        redis.del("#{base_redis_key}:popular_tags")
 
-    def assign_filename(event)
-      with_photo(event) do |photo|
-        photo.filename = event.data.fetch(:filename)
+        event_store.read.of_type([::Tagging::AutoTagsAdded, ::Tagging::TagsAdded, ::Tagging::TagRemoved])
+          .each_batch do |events|
+            events.each do |event|
+              case event
+                when Tagging::AutoTagsAdded, Tagging::TagsAdded then index_tags(event)
+                when Tagging::TagRemoved then delete_tag(event)
+              end
+            end
+          end
       end
-    end
 
-    def add_auto_tags(event)
-      with_photo(event) do |photo|
-        photo.last_tagging_at = event.timestamp
-      end
+      def index_tags(event)
+        tags = event.data.fetch(:tags)
 
-      create_tags(
-        event.data.fetch(:tags).map do |tag|
-          {
-            photo_id: event.data.fetch(:photo_id),
-            id: tag.fetch(:id),
-            name: tag.fetch(:name),
-            source: 'external',
-            provider: event.data.fetch(:provider),
-            added_at: event.timestamp
-          }
+        tags.each do |tag|
+          redis.set("#{base_redis_key}:photo_tags:#{tag[:id]}", tag[:name])
+          redis.zincrby("#{base_redis_key}:popular_tags", 1, tag[:name])
         end
-      )
-    end
-
-    def add_tags(event)
-      with_photo(event) do |photo|
-        photo.last_tagging_at = event.timestamp
       end
 
-      create_tags(
-        event.data.fetch(:tags).map do |tag|
-          {
-            photo_id: event.data.fetch(:photo_id),
-            id: tag.fetch(:id),
-            name: tag.fetch(:name),
-            source: 'admin',
-            added_at: event.timestamp
-          }
-        end
-      )
-    end
+      def delete_tag(event)
+        tag_id = event.data.fetch(:tag_id)
+        tag_name = redis.get("#{base_redis_key}:photo_tags:#{tag_id}")
 
-    def remove_tag(event)
-      Tags::Tag.delete(event.data.fetch(:tag_id))
-    end
-
-    def with_photo(event)
-      Tags::Photo.find_or_initialize_by(id: event.data.fetch(:photo_id)).tap do |photo|
-        yield photo
-        photo.save!
+        redis.del("#{base_redis_key}:photo_tags:#{tag_id}")
+        redis.zincrby("#{base_redis_key}:popular_tags", -1, tag_name)
       end
-    end
 
-    def create_tags(tags)
-      Tags::Tag.upsert_all(tags) if tags.any?
+      def redis
+        @redis ||= Redis.new
+      end
+
+      def base_redis_key
+        'week3_homework'
+      end
+
+      def event_store
+        Rails.configuration.event_store
+      end
     end
   end
 end

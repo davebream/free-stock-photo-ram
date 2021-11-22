@@ -22,6 +22,11 @@ module Tagging
       with_photo(command.aggregate_id) do |photo|
         photo.add_tags(command.tags)
       end
+
+      Success()
+
+    rescue Tagging::Photo::TagAlreadyAdded
+      Failure('One of the tags has been already added')
     end
 
     def remove_tag(command)

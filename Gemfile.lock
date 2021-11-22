@@ -336,6 +336,7 @@ DEPENDENCIES
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.0)
   rails_event_store (~> 2.3.0)
+  redis
   rexml
   rspec-rails
   rubocop

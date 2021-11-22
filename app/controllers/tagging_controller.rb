@@ -1,12 +1,12 @@
 class TaggingController < ApplicationController
   def index
-    @photos = Tags::Photo.tagged.order(last_tagging_at: :desc).includes(:tags)
+    @photos = PhotoTags::Photo.tagged.order(last_tagging_at: :desc).includes(:tags)
 
     render :index
   end
 
   def create
-    ActiveRecord::Base.transaction do
+    result = ActiveRecord::Base.transaction do
       command_bus.call(
         Tagging::AddTags.new(
           photo_id: params[:photo_id],
@@ -15,6 +15,11 @@ class TaggingController < ApplicationController
           end
         )
       )
+    end
+
+    if result.failure?
+      flash.keep
+      flash[:error] = result.failure
     end
 
     redirect_to action: 'index'

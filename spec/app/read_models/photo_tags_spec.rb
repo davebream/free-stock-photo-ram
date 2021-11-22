@@ -1,15 +1,15 @@
 require 'rails_helper'
 
-RSpec.describe 'Tags Read Models', :in_memory_integration do
+RSpec.describe 'Photo Tags Read Models', :in_memory_integration do
   let(:photo_id) { SecureRandom.uuid }
-  let(:photo) { Tags::Photo.find_by(id: photo_id) }
+  let(:photo) { PhotoTags::Photo.find_by(id: photo_id) }
 
   let(:auto_tag_id) { SecureRandom.uuid }
-  let(:auto_tag) { Tags::Tag.find_by(id: auto_tag_id) }
+  let(:auto_tag) { PhotoTags::Tag.find_by(id: auto_tag_id) }
   let(:auto_tagging_at) { Time.new(2021, 9, 20, 21, 0).in_time_zone }
 
   let(:tag_id) { SecureRandom.uuid }
-  let(:tag) { Tags::Tag.find_by(id: tag_id) }
+  let(:tag) { PhotoTags::Tag.find_by(id: tag_id) }
   let(:tagging_at) { Time.new(2021, 9, 20, 21, 10).in_time_zone }
 
   it 'changes records basing on events' do
@@ -39,7 +39,7 @@ RSpec.describe 'Tags Read Models', :in_memory_integration do
 
     expect do
       event_store.publish(tag_removed)
-    end.to change { Tags::Tag.count }.by(-1)
+    end.to change { PhotoTags::Tag.count }.by(-1)
   end
 
   def filename_assigned

@@ -1,4 +1,4 @@
-module Tags
+module PhotoTags
   class Photo < ApplicationRecord
     self.table_name = 'read_model_tags_photos'
 

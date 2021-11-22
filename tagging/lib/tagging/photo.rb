@@ -2,6 +2,7 @@ module Tagging
   class Photo
     include AggregateRoot
 
+    TagAlreadyAdded = Class.new(StandardError)
     MissingFilename = Class.new(StandardError)
 
     Tag = Struct.new(:id, :name, :source, :provider)
@@ -28,6 +29,8 @@ module Tagging
     end
 
     def add_tags(tags)
+      raise TagAlreadyAdded if tags_already_added?(tags)
+
       apply TagsAdded.new(data: { photo_id: id, tags: tags })
     end
 
@@ -52,14 +55,18 @@ module Tagging
       @auto_tagged = true
 
       event.data.fetch(:tags).each do |tag|
-        @tags << Tag.new(id: tag[:id], name: tag[:name], source: 'external', provider: event.data.fetch(:provider))
+        @tags << Tag.new(tag[:id], tag[:name], 'external', event.data.fetch(:provider))
       end
     end
 
     on TagsAdded do |event|
       event.data.fetch(:tags).each do |tag|
-        @tags << Tag.new(id: tag[:id], name: tag[:name], source: 'admin')
+        @tags << Tag.new(tag[:id], tag[:name], 'admin')
       end
+    end
+
+    def tags_already_added?(new_tags)
+      tags.map(&:name).intersection(new_tags.pluck(:name)).any?
     end
 
     def already_auto_tagged?

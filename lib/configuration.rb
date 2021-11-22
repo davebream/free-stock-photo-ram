@@ -10,6 +10,7 @@ class Configuration
     # READ MODELS
 
     Review::Configuration.new(cqrs).call
+    PhotoTags::Configuration.new(cqrs).call
     Tags::Configuration.new(cqrs).call
     Uploads::Configuration.new(cqrs).call
 

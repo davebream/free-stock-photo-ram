@@ -17,4 +17,5 @@ Rails.application.routes.draw do
   end
 
   resources :tagging, only: %i(index destroy create)
+  resources :tags, only: %i(index)
 end
