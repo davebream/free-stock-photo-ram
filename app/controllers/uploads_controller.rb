@@ -1,6 +1,6 @@
 class UploadsController < ApplicationController
   def index
-    @uploads = Uploads::Image.order(uploaded_at: :desc)
+    @uploads = ::UploadedImage.wrap(Uploads::Image.order(uploaded_at: :desc))
 
     render :index
   end
