@@ -1,6 +1,8 @@
 default: &default
   adapter: postgresql
   pool: 5
+  host: localhost
+  port: 5432
   timeout: 5000
   database: free_stock_photo
   username: postgres

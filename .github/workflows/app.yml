@@ -1,0 +1,40 @@
+name: app
+
+on: [push]
+
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_DB: free_stock_photo_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - run: sudo apt-get -yqq install libpq-dev
+
+      - run: bundle exec rails db:prepare
+
+      - name: RSpec
+        env:
+          RAILS_ENV: test
+          PG_DATABASE: free_stock_photo_test
+          PG_HOST: localhost
+          PG_USER: postgres
+          TZ: Europe/Warsaw
+        run: bundle exec rspec
