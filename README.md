@@ -1,24 +1,5 @@
-# README
+# Free Stock Photo (Rails Architect Masterclass)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[![app](https://github.com/davebream/free-stock-photo-ram/actions/workflows/app.yml/badge.svg)](https://github.com/davebream/free-stock-photo-ram/actions/workflows/app.yml)
+[![reviewing](https://github.com/davebream/free-stock-photo-ram/actions/workflows/reviewing.yml/badge.svg)](https://github.com/davebream/free-stock-photo-ram/actions/workflows/reviewing.yml)
+[![reviewing](https://github.com/davebream/free-stock-photo-ram/actions/workflows/reviewing.yml/badge.svg)](https://github.com/davebream/free-stock-photo-ram/actions/workflows/reviewing.yml)
