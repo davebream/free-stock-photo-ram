@@ -55,21 +55,6 @@ RSpec.describe PhotoPublishing, :in_memory do
     end
   end
 
-  context 'with incompatible correlation ids' do
-    let(:events) do
-      [
-        processing_finished,
-        copyright_not_found,
-        photo_approved(id: SecureRandom.uuid)
-      ]
-    end
-
-    it 'does not publish the photo' do
-      subject
-      expect(command_bus.received).to be_nil
-    end
-  end
-
   context 'when photo published and then rejected' do
     let(:events) do
       [
