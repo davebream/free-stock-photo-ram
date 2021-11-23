@@ -3,11 +3,11 @@ module Publishing
     include CommandHandler
 
     def publish_photo(command)
-      with_photo(command.aggregate_id, &:publish)
+      with_photo(command.photo_id, &:publish)
     end
 
     def unpublish_photo(command)
-      with_photo(command.aggregate_id, &:unpublish)
+      with_photo(command.photo_id, &:unpublish)
     end
 
     def with_photo(photo_id, &block)

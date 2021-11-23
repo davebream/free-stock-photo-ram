@@ -3,16 +3,16 @@ module Reviewing
     include CommandHandler
 
     def pre_approve_photo(command)
-      with_photo(command.aggregate_id, &:pre_approve)
+      with_photo(command.photo_id, &:pre_approve)
     end
 
     def reject_photo(command)
-      with_photo(command.aggregate_id, &:reject)
+      with_photo(command.photo_id, &:reject)
     end
 
     def approve_photo(command)
       with_transaction do
-        with_photo(command.aggregate_id, &:approve)
+        with_photo(command.photo_id, &:approve)
       end
 
       Success()
