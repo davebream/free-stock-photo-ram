@@ -19,7 +19,7 @@ class TaggingController < ApplicationController
 
     if result.failure?
       flash.keep
-      flash[:error] = result.failure
+      flashes[:error] = result.failure
     end
 
     redirect_to action: 'index'
@@ -33,5 +33,11 @@ class TaggingController < ApplicationController
     end
 
     redirect_to action: 'index'
+  end
+
+  private
+
+  def flashes
+    flash[params[:photo_id]] ||= {}
   end
 end

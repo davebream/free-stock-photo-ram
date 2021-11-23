@@ -62,6 +62,15 @@
                 </div>
               <% end %>
             </div>
+            <% if flash[photo.id].present? %>
+              <div class="items-end justify-center mt-2 mb-4 relative">
+                <% flash[photo.id].each do |type, message| %>
+                  <div class="<%= tailwind_flash_classes(type.to_sym) %>">
+                    <%= message %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
           </td>
         </tr>
       <% end %>

@@ -26,7 +26,7 @@ module Tagging
       Success()
 
     rescue Tagging::Photo::TagAlreadyAdded
-      Failure('One of the tags has been already added')
+      Failure('One of the tags has already been added')
     end
 
     def remove_tag(command)
