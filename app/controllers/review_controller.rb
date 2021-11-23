@@ -1,6 +1,6 @@
 class ReviewController < ApplicationController
   def index
-    @photos = Review::Photo.order(uploaded_at: :desc)
+    @photos = ::ReviewedPhoto.wrap(Review::Photo.order(uploaded_at: :desc))
 
     render :index
   end
@@ -26,15 +26,19 @@ class ReviewController < ApplicationController
   end
 
   def approve
-    result = command_bus.call(
-      Reviewing::ApprovePhoto.new(photo_id: params[:id])
-    )
+    result = command_bus.call(Reviewing::ApprovePhoto.new(photo_id: params[:id]))
 
     if result.failure?
       flash.keep
-      flash[:error] = result.failure
+      flashes[:error] = result.failure
     end
 
     redirect_to action: 'index'
+  end
+
+  private
+
+  def flashes
+    flash[params[:id]] ||= {}
   end
 end

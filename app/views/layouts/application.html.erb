@@ -34,15 +34,6 @@
       </div>
     </nav>
     <div class="container mx-auto px-8 py-10">
-    <% if flash.any? %>
-      <div class="items-end justify-center mb-4">
-        <% flash.each do |type, message| %>
-          <div class="<%= tailwind_flash_classes(type.to_sym) %>">
-            <%= message %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
       <%= yield %>
     </div>
   </body>

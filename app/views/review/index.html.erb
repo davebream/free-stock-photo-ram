@@ -28,13 +28,13 @@
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900"><%= photo.status %></div>
+            <div class="<%= photo.status_classes %>"><%= photo.status %></div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900"><%= photo.copyright %></div>
+            <span class="<%= photo.copyright_classes %>"><%= photo.copyright %></span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900"><%= photo.published? %></div>
+            <span class="<%= photo.published_classes %>"><%= photo.published %></span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <div>
@@ -44,6 +44,15 @@
               |
               <%= link_to 'Approve', approve_review_path(photo.id), class: 'text-blue-600 hover:text-blue-900', method: :post %>
             </div>
+            <% if flash[photo.id].present? %>
+              <div class="items-end justify-center mb-4 relative">
+                <% flash[photo.id].each do |type, message| %>
+                  <div class="<%= tailwind_flash_classes(type.to_sym) %> absolute">
+                    <%= message %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
           </td>
         </tr>
       <% end %>
