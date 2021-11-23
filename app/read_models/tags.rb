@@ -5,23 +5,28 @@ module Tags
     end
 
     def call
-      @cqrs.subscribe(-> (event) { index_tags(event) }, [::Tagging::AutoTagsAdded])
-      @cqrs.subscribe(-> (event) { index_tags(event) }, [::Tagging::TagsAdded])
-      @cqrs.subscribe(-> (event) { delete_tag(event) }, [::Tagging::TagRemoved])
+      @cqrs.subscribe(
+        -> (event) { apply(event) },
+        [::Tagging::AutoTagsAdded, ::Tagging::TagsAdded, ::Tagging::TagRemoved]
+      )
     end
 
-    delegate :index_tags, :delete_tag, to: :class
+    delegate :apply, to: :class
     class << self
-      def rebuild
+      def apply(event)
+        case event
+          when Tagging::AutoTagsAdded, Tagging::TagsAdded then index_tags(event)
+          when Tagging::TagRemoved then delete_tag(event)
+        end
+      end
+
+      def rebuild(event_store:)
         redis.del("#{base_redis_key}:popular_tags")
 
         event_store.read.of_type([::Tagging::AutoTagsAdded, ::Tagging::TagsAdded, ::Tagging::TagRemoved])
           .each_batch do |events|
             events.each do |event|
-              case event
-                when Tagging::AutoTagsAdded, Tagging::TagsAdded then index_tags(event)
-                when Tagging::TagRemoved then delete_tag(event)
-              end
+              apply(event)
             end
           end
       end
@@ -37,10 +42,10 @@ module Tags
 
       def delete_tag(event)
         tag_id = event.data.fetch(:tag_id)
-        tag_name = redis.get("#{base_redis_key}:photo_tags:#{tag_id}")
+        tag_name = redis.get("week3_homework:photo_tags:#{tag_id}")
 
-        redis.del("#{base_redis_key}:photo_tags:#{tag_id}")
-        redis.zincrby("#{base_redis_key}:popular_tags", -1, tag_name)
+        redis.del("week3_homework:photo_tags:#{tag_id}")
+        redis.zincrby('week3_homework:popular_tags', -1, tag_name)
       end
 
       def redis
@@ -49,10 +54,6 @@ module Tags
 
       def base_redis_key
         'week3_homework'
-      end
-
-      def event_store
-        Rails.configuration.event_store
       end
     end
   end
