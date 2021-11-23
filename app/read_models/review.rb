@@ -64,7 +64,7 @@ module Review
     end
 
     def with_photo_by_image_id(event)
-      Review::Photo.find_or_initialize_by(id: event.image_id).tap do |photo|
+      Review::Photo.find_or_initialize_by(id: event.data.fetch(:image_id)).tap do |photo|
         yield photo
         photo.save!
       end
