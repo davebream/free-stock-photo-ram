@@ -18,7 +18,9 @@
         <tr>
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center h-40 w-40">
-              <%= image_tag photo.filename, skip_pipeline: true, class: 'object-cover h-full w-full' %>
+              <% if photo.filename %>
+                <%= image_tag photo.filename, skip_pipeline: true, class: 'object-cover h-full w-full' %>
+              <% end %>
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
