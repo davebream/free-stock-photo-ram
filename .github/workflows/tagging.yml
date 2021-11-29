@@ -51,4 +51,4 @@ jobs:
           PG_HOST: localhost
           PG_USER: postgres
           TZ: Europe/Warsaw
-        run: bundle exec rspec tagging
+        run: bundle exec rspec contexts/tagging
