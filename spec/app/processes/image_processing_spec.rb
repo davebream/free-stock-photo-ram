@@ -5,7 +5,7 @@ RSpec.describe ImageProcessing, :in_memory do
 
   subject do
     with_events(events).each do |event|
-      described_class.new(event_store, command_bus).call(event)
+      described_class.new(cqrs).call(event)
     end
   end
 

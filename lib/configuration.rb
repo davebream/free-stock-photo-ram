@@ -44,7 +44,7 @@ class Configuration
     # PROCESS MANAGERS
 
     cqrs.subscribe(
-      ImageProcessing.new(event_store, command_bus),
+      ImageProcessing.new(cqrs),
       [
         FileProcessing::DimensionsRecognized,
         FileProcessing::AverageColorExtracted
@@ -52,7 +52,7 @@ class Configuration
     )
 
     cqrs.subscribe(
-      PhotoPublishing.new(event_store, command_bus),
+      PhotoPublishing.new(cqrs),
       [
         FileProcessing::ProcessingFinished,
         CopyrightChecking::Found,

@@ -1,7 +1,6 @@
 class PhotoPublishing
-  def initialize(event_store, command_bus)
-    @event_store = event_store
-    @command_bus = command_bus
+  def initialize(cqrs)
+    @cqrs = cqrs
   end
 
   def call(event)
@@ -15,21 +14,19 @@ class PhotoPublishing
   private
 
   def publish(state)
-    command_bus.call(Publishing::PublishPhoto.new(photo_id: state.photo_id))
+    cqrs.run(Publishing::PublishPhoto.new(photo_id: state.photo_id))
   end
 
   def unpublish(state)
-    command_bus.call(Publishing::UnpublishPhoto.new(photo_id: state.photo_id))
+    cqrs.run(Publishing::UnpublishPhoto.new(photo_id: state.photo_id))
   end
-
-  attr_reader :event_store, :command_bus
 
   def build_state(event)
     photo_id = stream_id(event)
     stream_name = "PhotoPublishing$#{photo_id}"
-    past_events = event_store.read.stream(stream_name).to_a
+    past_events = cqrs.all_events_from_stream(stream_name)
     last_stored = past_events.size - 1
-    event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
+    cqrs.link_event_to_stream(event, stream_name, last_stored)
 
     ProcessState.new(photo_id).tap do |state|
       past_events.each { |ev| state.call(ev) }
@@ -47,6 +44,8 @@ class PhotoPublishing
         event.data.fetch(:photo_id)
     end
   end
+
+  attr_reader :cqrs
 
   class ProcessState
     attr_reader :photo_id

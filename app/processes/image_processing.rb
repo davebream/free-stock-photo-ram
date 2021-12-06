@@ -1,7 +1,6 @@
 class ImageProcessing
-  def initialize(event_store, command_bus)
-    @event_store = event_store
-    @command_bus = command_bus
+  def initialize(cqrs)
+    @cqrs = cqrs
   end
 
   def call(event)
@@ -12,7 +11,7 @@ class ImageProcessing
   private
 
   def finish_processing(state)
-    command_bus.call(
+    cqrs.run(
       FileProcessing::FinishProcessing.new(
         image_id: state.image_id,
         average_color: state.average_color,
@@ -25,9 +24,9 @@ class ImageProcessing
   def build_state(event)
     image_id = event.data.fetch(:image_id)
     stream_name = "ImageProcessing$#{image_id}"
-    past_events = event_store.read.stream(stream_name).to_a
+    past_events = cqrs.all_events_from_stream(stream_name)
     last_stored = past_events.size - 1
-    event_store.link(event.event_id, stream_name: stream_name, expected_version: last_stored)
+    cqrs.link_event_to_stream(event, stream_name, last_stored)
 
     ProcessState.new(image_id).tap do |state|
       past_events.each { |ev| state.call(ev) }
@@ -70,5 +69,5 @@ class ImageProcessing
     end
   end
 
-  attr_reader :event_store, :command_bus
+  attr_reader :cqrs
 end

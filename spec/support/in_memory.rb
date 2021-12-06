@@ -15,6 +15,10 @@ module InMemoryHelpers
     @command_bus ||= FakeCommandBus.new
   end
 
+  def cqrs
+    @cqrs ||= CQRS.new(event_store, command_bus)
+  end
+
   def with_events(events)
     events.each { |event| event_store.append(event) }
     events

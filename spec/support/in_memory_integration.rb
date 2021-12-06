@@ -7,6 +7,10 @@ module InMemoryIntegrationHelpers
     Rails.configuration.command_bus
   end
 
+  def cqrs
+    CQRS.new(event_store, command_bus)
+  end
+
   def run_command(command)
     command_bus.call(command)
   end
