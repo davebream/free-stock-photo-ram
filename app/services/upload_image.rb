@@ -9,7 +9,7 @@ class UploadImage
     path = File.join(Rails.public_path, 'images', filename)
     IO.binwrite(path, file.read)
 
-    yield filename if block_given?
+    filename
   end
 
   private

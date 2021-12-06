@@ -4,12 +4,12 @@ module Uploading
       @uploading_service = uploading_service
     end
 
-    def call(image_id)
-      uploading_service.call do |filename|
-        event_store.publish(
-          Uploading::ImageUploaded.new(data: { image_id: image_id, filename: filename })
-        )
-      end
+    def call(photo_id)
+      filename = uploading_service.call
+
+      event_store.publish(
+        Uploading::ImageUploaded.new(data: { photo_id: photo_id, filename: filename })
+      )
     end
 
     private

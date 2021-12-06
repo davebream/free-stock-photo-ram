@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ImageProcessing, :in_memory do
-  let(:image_id) { '4a57d789-42dc-45b7-bb4a-23bae35b1928' }
+  let(:photo_id) { '4a57d789-42dc-45b7-bb4a-23bae35b1928' }
 
   subject do
     with_events(events).each do |event|
@@ -48,7 +48,7 @@ RSpec.describe ImageProcessing, :in_memory do
   def dimensions_recognized
     FileProcessing::DimensionsRecognized.new(
       data: {
-        image_id: image_id,
+        photo_id: photo_id,
         width: 1920,
         height: 1080
       }
@@ -58,7 +58,7 @@ RSpec.describe ImageProcessing, :in_memory do
   def average_color_extracted
     FileProcessing::AverageColorExtracted.new(
       data: {
-        image_id: image_id,
+        photo_id: photo_id,
         rgb: [31, 26, 21]
       }
     )
@@ -66,7 +66,7 @@ RSpec.describe ImageProcessing, :in_memory do
 
   def finish_processing
     FileProcessing::FinishProcessing.new(
-      image_id: image_id,
+      photo_id: photo_id,
       width: 1920,
       height: 1080,
       average_color: [31, 26, 21]

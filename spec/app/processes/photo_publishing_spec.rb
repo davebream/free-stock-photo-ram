@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe PhotoPublishing, :in_memory do
-  let(:image_id) { SecureRandom.uuid }
   let(:photo_id) { SecureRandom.uuid }
 
   subject do
@@ -76,7 +75,7 @@ RSpec.describe PhotoPublishing, :in_memory do
   def processing_finished(id: photo_id)
     FileProcessing::ProcessingFinished.new(
       data: {
-        image_id: id,
+        photo_id: id,
         average_color: [31, 26, 21],
         width: 1920,
         height: 1089
@@ -85,11 +84,11 @@ RSpec.describe PhotoPublishing, :in_memory do
   end
 
   def copyright_found(id: photo_id)
-    CopyrightChecking::Found.new(data: { image_id: id })
+    CopyrightChecking::Found.new(data: { photo_id: id })
   end
 
   def copyright_not_found(id: photo_id)
-    CopyrightChecking::NotFound.new(data: { image_id: id })
+    CopyrightChecking::NotFound.new(data: { photo_id: id })
   end
 
   def photo_rejected(id: photo_id)

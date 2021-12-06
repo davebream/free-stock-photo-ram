@@ -1,5 +1,5 @@
 module CopyrightChecking
   class Found < ::Event
-    attribute :image_id, Types::UUID
+    attribute :photo_id, Types::UUID
   end
 end

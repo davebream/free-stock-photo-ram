@@ -22,7 +22,7 @@ class PhotoPublishing
   end
 
   def build_state(event)
-    photo_id = stream_id(event)
+    photo_id = event.data.fetch(:photo_id)
     stream_name = "PhotoPublishing$#{photo_id}"
     past_events = cqrs.all_events_from_stream(stream_name)
     last_stored = past_events.size - 1
@@ -34,15 +34,6 @@ class PhotoPublishing
     end
   rescue RubyEventStore::WrongExpectedEventVersion
     retry
-  end
-
-  def stream_id(event)
-    case event
-      when FileProcessing::ProcessingFinished, CopyrightChecking::Found, CopyrightChecking::NotFound
-        event.data.fetch(:image_id)
-      else
-        event.data.fetch(:photo_id)
-    end
   end
 
   attr_reader :cqrs

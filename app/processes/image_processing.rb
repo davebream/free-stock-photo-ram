@@ -13,7 +13,7 @@ class ImageProcessing
   def finish_processing(state)
     cqrs.run(
       FileProcessing::FinishProcessing.new(
-        image_id: state.image_id,
+        photo_id: state.photo_id,
         average_color: state.average_color,
         width: state.width,
         height: state.height
@@ -22,13 +22,13 @@ class ImageProcessing
   end
 
   def build_state(event)
-    image_id = event.data.fetch(:image_id)
-    stream_name = "ImageProcessing$#{image_id}"
+    photo_id = event.data.fetch(:photo_id)
+    stream_name = "ImageProcessing$#{photo_id}"
     past_events = cqrs.all_events_from_stream(stream_name)
     last_stored = past_events.size - 1
     cqrs.link_event_to_stream(event, stream_name, last_stored)
 
-    ProcessState.new(image_id).tap do |state|
+    ProcessState.new(photo_id).tap do |state|
       past_events.each { |ev| state.call(ev) }
       state.call(event)
     end
@@ -37,10 +37,10 @@ class ImageProcessing
   end
 
   class ProcessState
-    attr_reader :image_id, :average_color, :width, :height
+    attr_reader :photo_id, :average_color, :width, :height
 
-    def initialize(image_id)
-      @image_id = image_id
+    def initialize(photo_id)
+      @photo_id = photo_id
       @average_color = nil
       @width = nil
       @height = nil

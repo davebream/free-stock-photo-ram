@@ -48,7 +48,7 @@ module Uploads
     end
 
     def with_image(event)
-      Uploads::Image.find_or_initialize_by(id: event.data.fetch(:image_id)).tap do |image|
+      Uploads::Image.find_or_initialize_by(id: event.data.fetch(:photo_id)).tap do |image|
         yield image
         image.save!
       end
