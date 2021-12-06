@@ -12,7 +12,7 @@ module CopyrightChecking
 
         event_klass = [Found, NotFound].sample
 
-        event_store.publish(
+        cqrs.publish(
           event_klass.new(data: { photo_id: event.data.fetch(:photo_id) })
         )
       end

@@ -7,16 +7,19 @@ class CQRS
     @commands_to_events = {}
   end
 
+  delegate :publish, :subscribe_to_all_events, to: :event_store
+
   def subscribe(subscriber, events)
-    @event_store.subscribe(subscriber, to: events)
+    event_store.subscribe(subscriber, to: events)
   end
 
-  def register_command(command, command_handler, events)
-    @commands_to_events[command_handler] = events
+  def register_command(command, command_handler, event)
+    @commands_to_events[command] = event
     @command_bus.register(command, command_handler)
   end
 
   def register(command, command_handler)
+    @commands_to_events[command] = NoEvent.new
     @command_bus.register(command, command_handler)
   end
 
@@ -25,7 +28,11 @@ class CQRS
   end
 
   def link_event_to_stream(event, stream, expected_version = :any)
-    @event_store.link(event.event_id, stream_name: stream, expected_version: expected_version)
+    event_store.link(
+      event.event_id,
+      stream_name: stream,
+      expected_version: expected_version
+    )
   end
 
   def all_events_from_stream(name)
@@ -34,5 +41,11 @@ class CQRS
 
   def to_hash
     @commands_to_events
+  end
+
+  class NoEvent
+    def to_s
+      ''
+    end
   end
 end

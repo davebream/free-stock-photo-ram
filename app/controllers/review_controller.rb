@@ -7,7 +7,7 @@ class ReviewController < ApplicationController
 
   def reject
     with_transaction do
-      command_bus.call(
+      cqrs.run(
         Reviewing::RejectPhoto.new(photo_id: params[:id])
       )
     end
@@ -17,7 +17,7 @@ class ReviewController < ApplicationController
 
   def pre_approve
     with_transaction do
-      command_bus.call(
+      cqrs.run(
         Reviewing::PreApprovePhoto.new(photo_id: params[:id])
       )
     end
@@ -26,7 +26,7 @@ class ReviewController < ApplicationController
   end
 
   def approve
-    result = command_bus.call(Reviewing::ApprovePhoto.new(photo_id: params[:id]))
+    result = cqrs.run(Reviewing::ApprovePhoto.new(photo_id: params[:id]))
 
     if result.failure?
       flash.keep

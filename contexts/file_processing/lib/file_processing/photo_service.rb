@@ -3,7 +3,7 @@ module FileProcessing
     include CommandHandler
 
     def finish_processing(command)
-      event_store.publish(
+      cqrs.publish(
         FileProcessing::ProcessingFinished.new(
           data: {
             photo_id: command.photo_id,

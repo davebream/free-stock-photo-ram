@@ -10,7 +10,7 @@ module CommandHandler
   end
 
   def with_aggregate(aggregate_class, aggregate_id, &block)
-    repository = AggregateRoot::InstrumentedRepository.new(AggregateRoot::Repository.new(event_store), ActiveSupport::Notifications)
+    repository = AggregateRoot::InstrumentedRepository.new(AggregateRoot::Repository.new(cqrs.event_store), ActiveSupport::Notifications)
     aggregate = aggregate_class.new(aggregate_id)
     stream = stream_name(aggregate_class, aggregate_id)
     repository.with_aggregate(aggregate, stream, &block)
@@ -26,7 +26,7 @@ module CommandHandler
 
   private
 
-  def event_store
-    Rails.configuration.event_store
+  def cqrs
+    Rails.configuration.cqrs
   end
 end

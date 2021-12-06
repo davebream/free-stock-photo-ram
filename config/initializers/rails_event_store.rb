@@ -12,10 +12,13 @@ Rails.configuration.to_prepare do
 
   command_bus = Arkency::CommandBus.new
 
-  ::Configuration.new.call(Rails.configuration.event_store, command_bus)
-
   Rails.configuration.command_bus = RubyEventStore::CorrelatedCommands.new(
     Rails.configuration.event_store,
     command_bus
   )
+
+  cqrs = CQRS.new(Rails.configuration.event_store, command_bus)
+  Rails.configuration.cqrs = cqrs
+
+  ::Configuration.new.call(cqrs)
 end

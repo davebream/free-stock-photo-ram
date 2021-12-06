@@ -7,7 +7,7 @@ module Uploading
     def call(photo_id)
       filename = uploading_service.call
 
-      event_store.publish(
+      cqrs.publish(
         Uploading::ImageUploaded.new(data: { photo_id: photo_id, filename: filename })
       )
     end
@@ -17,7 +17,7 @@ module Uploading
     attr_reader :uploading_service
 
     def event_store
-      Rails.configuration.event_store
+      Rails.configuration.cqrs.event_store
     end
   end
 end

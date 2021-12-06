@@ -1,11 +1,12 @@
 class Configuration
-  def call(event_store, command_bus)
-    event_store.subscribe_to_all_events(RailsEventStore::LinkByEventType.new)
-    event_store.subscribe_to_all_events(RailsEventStore::LinkByCorrelationId.new)
-    event_store.subscribe_to_all_events(RailsEventStore::LinkByMetadata.new(event_store: event_store, key: :user_id))
-    event_store.subscribe_to_all_events(RailsEventStore::LinkByMetadata.new(event_store: event_store, key: :user_email))
-
-    cqrs = CQRS.new(event_store, command_bus)
+  def call(cqrs)
+    [
+      RailsEventStore::LinkByEventType.new,
+      RailsEventStore::LinkByCorrelationId.new,
+      RailsEventStore::LinkByCausationId.new,
+      RailsEventStore::LinkByMetadata.new(event_store: cqrs.event_store, key: :user_id),
+      RailsEventStore::LinkByMetadata.new(event_store: cqrs.event_store, key: :user_email)
+    ].each { |h| cqrs.subscribe_to_all_events(h) }
 
     # READ MODELS
 

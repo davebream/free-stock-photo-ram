@@ -1,12 +1,8 @@
 class ApplicationController < ActionController::Base
   around_action :use_request_metadata
 
-  def event_store
-    Rails.configuration.event_store
-  end
-
-  def command_bus
-    Rails.configuration.command_bus
+  def cqrs
+    Rails.configuration.cqrs
   end
 
   def current_user
@@ -23,7 +19,7 @@ class ApplicationController < ActionController::Base
   private
 
   def use_request_metadata(&block)
-    Rails.configuration.event_store.with_metadata(request_metadata, &block)
+    Rails.configuration.cqrs.event_store.with_metadata(request_metadata, &block)
   end
 
   def with_transaction(&block)

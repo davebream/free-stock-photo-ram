@@ -8,7 +8,7 @@ module InMemoryHelpers
   end
 
   def event_store
-    @event_store ||= RailsEventStore::Client.new(repository: RubyEventStore::InMemoryRepository.new)
+    @event_store ||= EventStore.in_memory
   end
 
   def command_bus
@@ -20,7 +20,7 @@ module InMemoryHelpers
   end
 
   def with_events(events)
-    events.each { |event| event_store.append(event) }
+    events.each { |event| cqrs.event_store.append(event) }
     events
   end
 end

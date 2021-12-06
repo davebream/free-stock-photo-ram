@@ -7,7 +7,7 @@ class TaggingController < ApplicationController
 
   def create
     result = ActiveRecord::Base.transaction do
-      command_bus.call(
+      cqrs.run(
         Tagging::AddTags.new(
           photo_id: params[:photo_id],
           tags: params[:tags].strip.split(',').map do |tag|
@@ -27,7 +27,7 @@ class TaggingController < ApplicationController
 
   def destroy
     ActiveRecord::Base.transaction do
-      command_bus.call(
+      cqrs.run(
         Tagging::RemoveTag.new(photo_id: params[:id], tag_id: params[:tag_id])
       )
     end

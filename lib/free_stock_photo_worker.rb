@@ -13,12 +13,8 @@ module FreeStockPhotoWorker
       end
     end
 
-    def event_store
-      Rails.configuration.event_store
-    end
-
-    def command_bus
-      Rails.configuration.command_bus
+    def cqrs
+      Rails.configuration.cqrs
     end
 
     def sleep_random

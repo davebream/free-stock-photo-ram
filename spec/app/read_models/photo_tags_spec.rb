@@ -13,9 +13,9 @@ RSpec.describe 'Photo Tags Read Models', :in_memory_integration do
   let(:tagging_at) { Time.new(2021, 9, 20, 21, 10).in_time_zone }
 
   it 'changes records basing on events' do
-    event_store.publish(filename_assigned)
-    event_store.publish(auto_tags_added)
-    event_store.publish(tags_added)
+    cqrs.publish(filename_assigned)
+    cqrs.publish(auto_tags_added)
+    cqrs.publish(tags_added)
 
     expect(photo).to have_attributes(
       filename: 'test.jpg',
@@ -38,7 +38,7 @@ RSpec.describe 'Photo Tags Read Models', :in_memory_integration do
     )
 
     expect do
-      event_store.publish(tag_removed)
+      cqrs.publish(tag_removed)
     end.to change { PhotoTags::Tag.count }.by(-1)
   end
 

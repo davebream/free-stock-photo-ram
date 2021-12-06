@@ -18,7 +18,7 @@ module Tagging
           { id: SecureRandom.uuid, name: tag }
         end
 
-        event_store.publish(
+        cqrs.publish(
           Tagging::AutoTagsGenerated.new(
             data: {
               photo_id: event.data.fetch(:photo_id),
