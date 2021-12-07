@@ -6,12 +6,12 @@ class UploadsController < ApplicationController
   end
 
   def create
-    params[:files].each do |file|
-      photo_id = SecureRandom.uuid
+    ActiveRecord::Base.transaction do
+      params[:files].each do |file|
+        photo_id = SecureRandom.uuid
 
-      uploading_service = ::UploadImage.new(photo_id, file)
+        uploading_service = ::UploadImage.new(photo_id, file)
 
-      ActiveRecord::Base.transaction do
         Uploading::UploadImage.new(uploading_service).call(photo_id)
       end
     end

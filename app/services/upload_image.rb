@@ -7,7 +7,7 @@ class UploadImage
   def call
     filename = photo_id + File.extname(file)
     path = File.join(Rails.public_path, 'images', filename)
-    IO.binwrite(path, file.read)
+    File.binwrite(path, file.read)
 
     filename
   end
