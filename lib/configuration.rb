@@ -8,21 +8,27 @@ class Configuration
       RailsEventStore::LinkByMetadata.new(event_store: cqrs.event_store, key: :user_email)
     ].each { |h| cqrs.subscribe_to_all_events(h) }
 
+    ###
     # READ MODELS
+    ###
 
     Review::Configuration.new(cqrs).call
     PhotoTags::Configuration.new(cqrs).call
     Tags::Configuration.new(cqrs).call
     Uploads::Configuration.new(cqrs).call
 
+    ###
     # BOUNDED CONTEXTS
+    ###
 
     FileProcessing::Configuration.new(cqrs).call
     Tagging::Configuration.new(cqrs).call
     Reviewing::Configuration.new(cqrs).call
     Publishing::Configuration.new(cqrs).call
 
+    ###
     # EVENT HANDLERS
+    ###
 
     cqrs.subscribe(CopyrightChecking::Worker::Search, [::Uploading::ImageUploaded])
     cqrs.subscribe(FileProcessing::Worker::ExtractAverageColor, [::Uploading::ImageUploaded])
@@ -42,7 +48,9 @@ class Configuration
       [Reviewing::PhotoApproved]
     )
 
+    ###
     # PROCESS MANAGERS
+    ###
 
     cqrs.subscribe(
       ImageProcessing.new(cqrs),

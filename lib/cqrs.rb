@@ -1,10 +1,11 @@
 class CQRS
-  attr_reader :event_store
+  attr_reader :event_store, :command_bus, :rebuilders
 
   def initialize(event_store, command_bus)
     @event_store = event_store
     @command_bus = command_bus
     @commands_to_events = {}
+    @rebuilders = {}
   end
 
   delegate :publish, :subscribe_to_all_events, to: :event_store
@@ -21,6 +22,10 @@ class CQRS
   def register(command, command_handler)
     @commands_to_events[command] = NoEvent.new
     @command_bus.register(command, command_handler)
+  end
+
+  def register_rebuilder(name, rebuilder)
+    @rebuilders[name] = rebuilder
   end
 
   def run(command)

@@ -8,21 +8,23 @@ module Tags
     def call
       subscribe(-> (event) { index_tags(event) }, [::Tagging::AutoTagsAdded, ::Tagging::TagsAdded])
       subscribe(-> (event) { delete_tag(event) }, [::Tagging::TagRemoved])
+
+      cqrs.register_rebuilder('tags_read_model', public_method(:rebuild))
     end
 
     def rebuild
-      call
-
       redis.del("#{base_redis_key}:popular_tags")
 
-      @cqrs.event_store.read.of_type(@subscriptions.keys).each do |event|
-        @subscriptions[event.class.to_s].each do |handler|
+      cqrs.event_store.read.of_type(subscriptions.keys).each do |event|
+        subscriptions[event.class.to_s].each do |handler|
           handler.call(event)
         end
       end
     end
 
     private
+
+    attr_reader :cqrs, :subscriptions
 
     def subscribe(handler, events)
       @cqrs.subscribe(-> (event) { handler.call(event) }, events)
@@ -56,6 +58,30 @@ module Tags
 
     def base_redis_key
       'week3_homework'
+    end
+
+    class Rebuilder
+      def initialize(configuration)
+        @configuration = configuration
+      end
+
+      def name
+        'tags_read_model'
+      end
+
+      def run
+        configuration.redis.del("#{configuration.base_redis_key}:popular_tags")
+
+        configuration.cqrs.event_store.read.of_type(configuration.subscriptions.keys).each do |event|
+          configuration.subscriptions[event.class.to_s].each do |handler|
+            handler.call(event)
+          end
+        end
+      end
+
+      private
+
+      attr_reader :configuration
     end
   end
 end

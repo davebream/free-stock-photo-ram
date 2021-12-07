@@ -2,16 +2,40 @@ module PhotoTags
   class Configuration
     def initialize(cqrs)
       @cqrs = cqrs
+      @subscriptions = {}
     end
 
     def call
-      @cqrs.subscribe(-> (event) { assign_filename(event) }, [::Tagging::FilenameAssigned])
-      @cqrs.subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::AutoTagsAdded])
-      @cqrs.subscribe(-> (event) { add_tags(event) }, [::Tagging::TagsAdded])
-      @cqrs.subscribe(-> (event) { remove_tag(event) }, [::Tagging::TagRemoved])
+      subscribe(-> (event) { assign_filename(event) }, [::Tagging::FilenameAssigned])
+      subscribe(-> (event) { add_auto_tags(event) }, [::Tagging::AutoTagsAdded])
+      subscribe(-> (event) { add_tags(event) }, [::Tagging::TagsAdded])
+      subscribe(-> (event) { remove_tag(event) }, [::Tagging::TagRemoved])
+      cqrs.register_rebuilder('photo_tags_read_model', public_method(:rebuild))
+    end
+
+    def rebuild
+      PhotoTags::Tag.delete_all
+      PhotoTags::Photo.delete_all
+
+      cqrs.event_store.read.of_type(subscriptions.keys).each do |event|
+        subscriptions[event.class.to_s].each do |handler|
+          handler.call(event)
+        end
+      end
     end
 
     private
+
+    attr_reader :cqrs, :subscriptions
+
+    def subscribe(handler, events)
+      cqrs.subscribe(-> (event) { handler.call(event) }, events)
+
+      events.each do |event_klass|
+        @subscriptions[event_klass.to_s] ||= []
+        @subscriptions[event_klass.to_s] << handler
+      end
+    end
 
     def assign_filename(event)
       with_photo(event) do |photo|
