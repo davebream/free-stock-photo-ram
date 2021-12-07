@@ -17,16 +17,16 @@ class ReviewController < ApplicationController
 
   def pre_approve
     with_transaction do
-      cqrs.run(
-        Reviewing::PreApprovePhoto.new(photo_id: params[:id])
-      )
+      cqrs.run(Reviewing::PreApprovePhoto.new(photo_id: params[:id]))
     end
 
     redirect_to action: 'index'
   end
 
   def approve
-    result = cqrs.run(Reviewing::ApprovePhoto.new(photo_id: params[:id]))
+    result = with_transaction do
+      cqrs.run(Reviewing::ApprovePhoto.new(photo_id: params[:id]))
+    end
 
     if result.failure?
       flash.keep

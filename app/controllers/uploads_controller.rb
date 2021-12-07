@@ -6,7 +6,7 @@ class UploadsController < ApplicationController
   end
 
   def create
-    ActiveRecord::Base.transaction do
+    with_transaction do
       params[:files].each do |file|
         photo_id = SecureRandom.uuid
 
