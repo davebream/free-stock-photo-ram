@@ -1,6 +1,9 @@
 module FileProcessing
   class PhotoService
-    include CommandHandler
+    def initialize(cqrs)
+      @cqrs = cqrs
+      @repository = AggregateRootRepository.new(cqrs.event_store)
+    end
 
     def finish_processing(command)
       cqrs.publish(
@@ -13,6 +16,14 @@ module FileProcessing
           }
         )
       )
+    end
+
+    private
+
+    attr_reader :cqrs, :repository
+
+    def with_photo(photo_id, &block)
+      repository.with_aggregate(Photo, photo_id, &block)
     end
   end
 end

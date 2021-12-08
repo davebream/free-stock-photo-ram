@@ -3,9 +3,7 @@ class ApplicationController < ActionController::Base
 
   around_action :use_request_metadata
 
-  def cqrs
-    Rails.configuration.cqrs
-  end
+  private
 
   def current_user
     @current_user ||= User.new(
@@ -18,7 +16,9 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  private
+  def cqrs
+    Rails.configuration.cqrs
+  end
 
   def use_request_metadata(&block)
     cqrs.event_store.with_metadata(request_metadata, &block)

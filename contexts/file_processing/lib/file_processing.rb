@@ -5,7 +5,13 @@ module FileProcessing
     end
 
     def call
-      @cqrs.register(FileProcessing::FinishProcessing, FileProcessing::PhotoService.new)
+      photo_service = FileProcessing::PhotoService.new(cqrs)
+
+      cqrs.register(FileProcessing::FinishProcessing, photo_service.public_method(:finish_processing))
     end
+
+    private
+
+    attr_reader :cqrs
   end
 end

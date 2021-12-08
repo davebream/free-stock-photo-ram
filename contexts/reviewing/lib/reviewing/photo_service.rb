@@ -1,19 +1,21 @@
 module Reviewing
   class PhotoService
-    include CommandHandler
+    include Dry::Monads[:result]
 
-    def pre_approve_photo(command)
+    def initialize(cqrs)
+      @repository = AggregateRootRepository.new(cqrs.event_store)
+    end
+
+    def pre_approve(command)
       with_photo(command.photo_id, &:pre_approve)
     end
 
-    def reject_photo(command)
+    def reject(command)
       with_photo(command.photo_id, &:reject)
     end
 
-    def approve_photo(command)
-      with_transaction do
-        with_photo(command.photo_id, &:approve)
-      end
+    def approve(command)
+      with_photo(command.photo_id, &:approve)
 
       Success()
 
@@ -23,8 +25,12 @@ module Reviewing
       Failure('Approving rejected photos forbidden')
     end
 
+    private
+
+    attr_reader :repository
+
     def with_photo(photo_id, &block)
-      with_aggregate(Photo, photo_id, &block)
+      repository.with_aggregate(Photo, photo_id, &block)
     end
   end
 end

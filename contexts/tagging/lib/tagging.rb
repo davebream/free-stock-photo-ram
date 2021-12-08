@@ -5,11 +5,11 @@ module Tagging
     end
 
     def call # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      @cqrs.subscribe(Tagging::Worker::AutoTagPhoto, [Tagging::AutoTaggingRequested])
+      cqrs.subscribe(Tagging::Worker::AutoTagPhoto, [Tagging::AutoTaggingRequested])
 
-      @cqrs.subscribe(
+      cqrs.subscribe(
         lambda do |event|
-          @cqrs.run(
+          cqrs.run(
             Tagging::AddAutoTags.new(
               photo_id: event.data.fetch(:photo_id),
               tags: event.data.fetch(:tags),
@@ -20,11 +20,17 @@ module Tagging
         [Tagging::AutoTagsGenerated]
       )
 
-      @cqrs.register(Tagging::AssignFilename, Tagging::PhotoService.new)
-      @cqrs.register(Tagging::RequestAutoTagging, Tagging::PhotoService.new)
-      @cqrs.register(Tagging::AddAutoTags, Tagging::PhotoService.new)
-      @cqrs.register(Tagging::AddTags, Tagging::PhotoService.new)
-      @cqrs.register(Tagging::RemoveTag, Tagging::PhotoService.new)
+      photo_service = Tagging::PhotoService.new(cqrs)
+
+      cqrs.register(Tagging::AssignFilename, photo_service.public_method(:assign_filename))
+      cqrs.register(Tagging::RequestAutoTagging, photo_service.public_method(:request_auto_tagging))
+      cqrs.register(Tagging::AddAutoTags, photo_service.public_method(:add_auto_tags))
+      cqrs.register(Tagging::AddTags, photo_service.public_method(:add_tags))
+      cqrs.register(Tagging::RemoveTag, photo_service.public_method(:remove_tag))
     end
+
+    private
+
+    attr_reader :cqrs
   end
 end

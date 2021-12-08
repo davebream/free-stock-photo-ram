@@ -5,8 +5,14 @@ module Publishing
     end
 
     def call
-      @cqrs.register(Publishing::PublishPhoto, Publishing::PhotoService.new)
-      @cqrs.register(Publishing::UnpublishPhoto, Publishing::PhotoService.new)
+      photo_service = Publishing::PhotoService.new(cqrs)
+
+      cqrs.register(Publishing::PublishPhoto, photo_service.public_method(:publish))
+      cqrs.register(Publishing::UnpublishPhoto, photo_service.public_method(:unpublish))
     end
+
+    private
+
+    attr_reader :cqrs
   end
 end

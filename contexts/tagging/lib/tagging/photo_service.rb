@@ -1,6 +1,10 @@
 module Tagging
   class PhotoService
-    include CommandHandler
+    include Dry::Monads[:result]
+
+    def initialize(cqrs)
+      @repository = AggregateRootRepository.new(cqrs.event_store)
+    end
 
     def assign_filename(command)
       with_photo(command.aggregate_id) do |photo|
@@ -35,8 +39,12 @@ module Tagging
       end
     end
 
+    private
+
+    attr_reader :repository
+
     def with_photo(photo_id, &block)
-      with_aggregate(Photo, photo_id, &block)
+      repository.with_aggregate(Photo, photo_id, &block)
     end
   end
 end
