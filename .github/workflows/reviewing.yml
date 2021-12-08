@@ -28,7 +28,7 @@ jobs:
 
       - run: sudo apt-get -yqq install libpq-dev
 
-      - run: bundle exec rails db:prepare
+      - run: bundle exec rails db:test:prepare
 
       - name: RSpec
         env:
