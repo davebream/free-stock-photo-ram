@@ -25,7 +25,7 @@
 
 ### Database
 
-    bundle exec rails rails db:prepare
+    bundle exec rails db:prepare
 
 ### Frontend setup
 
