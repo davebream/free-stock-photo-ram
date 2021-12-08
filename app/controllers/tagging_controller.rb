@@ -7,14 +7,7 @@ class TaggingController < ApplicationController
 
   def create
     result = with_transaction do
-      cqrs.run(
-        Tagging::AddTags.new(
-          photo_id: params[:photo_id],
-          tags: params[:tags].strip.split(',').map do |tag|
-            { id: SecureRandom.uuid, name: tag.strip }
-          end
-        )
-      )
+      cqrs.run(add_tags_command)
     end
 
     if result.failure?
@@ -37,5 +30,14 @@ class TaggingController < ApplicationController
 
   def flashes
     flash[params[:photo_id]] ||= {}
+  end
+
+  def add_tags_command
+    Tagging::AddTags.new(
+      photo_id: params[:photo_id],
+      tags: params[:tags].strip.split(',').map do |tag|
+        { id: SecureRandom.uuid, name: tag.strip }
+      end
+    )
   end
 end

@@ -4,7 +4,7 @@ module Tagging
       @cqrs = cqrs
     end
 
-    def call
+    def call # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       @cqrs.subscribe(Tagging::Worker::AutoTagPhoto, [Tagging::AutoTaggingRequested])
 
       @cqrs.subscribe(

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  User = Struct.new(:id, :first_name, :last_name, :full_name, :username, :email, keyword_init: true)
+
   around_action :use_request_metadata
 
   def cqrs
@@ -6,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    @current_user ||= OpenStruct.new(
+    @current_user ||= User.new(
       id: 'fb635307-e831-457b-99f1-097a77056331',
       first_name: 'Dawid',
       last_name: 'Leszczyński',
@@ -19,7 +21,7 @@ class ApplicationController < ActionController::Base
   private
 
   def use_request_metadata(&block)
-    Rails.configuration.cqrs.event_store.with_metadata(request_metadata, &block)
+    cqrs.event_store.with_metadata(request_metadata, &block)
   end
 
   def with_transaction(&block)
