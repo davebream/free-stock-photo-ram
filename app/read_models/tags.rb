@@ -46,10 +46,10 @@ module Tags
 
     def delete_tag(event)
       tag_id = event.data.fetch(:tag_id)
-      tag_name = redis.get("week3_homework:photo_tags:#{tag_id}")
+      tag_name = redis.get("free_stock_photo:photo_tags:#{tag_id}")
 
-      redis.del("week3_homework:photo_tags:#{tag_id}")
-      redis.zincrby('week3_homework:popular_tags', -1, tag_name)
+      redis.del("free_stock_photo:photo_tags:#{tag_id}")
+      redis.zincrby('free_stock_photo:popular_tags', -1, tag_name)
     end
 
     def redis
@@ -57,7 +57,7 @@ module Tags
     end
 
     def base_redis_key
-      'week3_homework'
+      'free_stock_photo'
     end
 
     class Rebuilder

@@ -11,7 +11,7 @@ class PopularTags
     private
 
     def popular_tags
-      redis.zrevrange('week3_homework:popular_tags', 0, 100, with_scores: true) || []
+      redis.zrevrange('free_stock_photo:popular_tags', 0, 100, with_scores: true) || []
     end
 
     def redis
