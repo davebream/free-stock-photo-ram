@@ -5,7 +5,8 @@ class Configuration
       RailsEventStore::LinkByCorrelationId.new,
       RailsEventStore::LinkByCausationId.new,
       RailsEventStore::LinkByMetadata.new(event_store: cqrs.event_store, key: :user_id),
-      RailsEventStore::LinkByMetadata.new(event_store: cqrs.event_store, key: :user_email)
+      RailsEventStore::LinkByMetadata.new(event_store: cqrs.event_store, key: :user_email),
+      LinkByPhotoId.new(cqrs)
     ].each { |h| cqrs.subscribe_to_all_events(h) }
 
     ###
