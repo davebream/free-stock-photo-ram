@@ -1,6 +1,6 @@
 class TaggingController < ApplicationController
   def index
-    @photos = PhotoTags::Photo.tagged.with_file.order(last_tagging_at: :desc).includes(:tags)
+    @photos = PhotoTags::Photo.tagged.with_file.order(created_at: :desc).includes(:tags)
 
     render :index
   end
