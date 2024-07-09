@@ -6,7 +6,9 @@ class UploadImage
 
   def call
     filename = photo_id + File.extname(file)
-    path = Rails.public_path.join('images', filename)
+    directory = Rails.public_path.join('images')
+    FileUtils.mkdir_p(directory) unless File.directory?(directory)
+    path = File.join(directory, filename)
     File.binwrite(path, file.read)
 
     filename
