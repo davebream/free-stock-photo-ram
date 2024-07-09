@@ -1,5 +1,5 @@
-ActiveRecord::Base.transaction do
-  Dir.glob(Rails.root.join('db/seeds/images/*')).each do |f|
+Dir.glob(Rails.root.join('db/seeds/images/*')).each do |f|
+  ActiveRecord::Base.transaction do
     file = File.open(f)
     photo_id = SecureRandom.uuid
     uploading_service = ::UploadImage.new(photo_id, file)
